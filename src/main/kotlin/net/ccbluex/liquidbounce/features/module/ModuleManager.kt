@@ -39,6 +39,7 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoLeave
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoRod
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoShoot
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
+import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleDBCHelper
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleFakeLag
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleHitbox
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleKeepSprint
@@ -95,6 +96,8 @@ import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAntiStaff
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAutoAccount
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAutoChatGame
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAutoConfig
+import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAutoGG
+import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAutoL
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAutoPearl
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleBetterTab
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleBookBot
@@ -467,6 +470,7 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             ModuleAutoBuff,
             ModuleAutoRod,
             ModuleAutoWeapon,
+            ModuleDBCHelper,
             ModuleFakeLag,
             ModuleCriticals,
             ModuleHitbox,
@@ -551,6 +555,8 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             ModuleDebugRecorder,
             ModuleAntiCheatDetect,
             ModuleEasyPearl,
+            ModuleAutoL,
+            ModuleAutoGG,
 
             // Movement
             ModuleAirJump,

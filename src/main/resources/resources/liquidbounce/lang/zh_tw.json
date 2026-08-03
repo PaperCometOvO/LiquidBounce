@@ -601,6 +601,8 @@
   "liquidbounce.module.killAura.messages.badCooldown": "冷卻時間至少應為 1.0，否則無法正確造成暴擊傷害。",
   "liquidbounce.module.noMissCooldown.description": "禁用1.8攻擊冷卻時間或完全取消未擊中的攻擊。",
   "liquidbounce.module.maceKill.description": "使用重錘時一擊擊殺",
+  "liquidbounce.module.dBCHelper.description": "使你的BC變成DBC（通過雙倍點擊）",
+  "liquidbounce.module.autoL.description": "自動嘲諷被你殺死的玩家",
   "liquidbounce.module.liquidWalk.description": "允許你在水面上行走。",
   "liquidbounce.module.longJump.description": "允許你跳的更遠。",
   "liquidbounce.module.mobOwners.description": "允許你看到已馴養生物和彈射物屬於哪個玩家。",
@@ -797,5 +799,6 @@
   "liquidbounce.module.autoArmor.value.simulate_inventory.description": "是否在服務端層面模擬打開背包。",
   "liquidbounce.module.antiCheatDetect.messages.actionNumbers": "動作編號: %s",
   "liquidbounce.module.antiCheatDetect.messages.differences": "差異: %s",
-  "liquidbounce.module.antiCheatDetect.messages.description": "Anti Cheat Detect 將嘗試在你下次加入任何伺服器/遊戲時，通過監控 ping 參數來檢測伺服器的反作弊系統。請注意，結果可能不準確，特別是當伺服器上有多個反作弊系統時。"
+  "liquidbounce.module.antiCheatDetect.messages.description": "Anti Cheat Detect 將嘗試在你下次加入任何伺服器/遊戲時，通過監控 ping 參數來檢測伺服器的反作弊系統。請注意，結果可能不準確，特別是當伺服器上有多個反作弊系統時。",
+  "liquidbounce.module.autoGG.messages.description": "在你每次遊戲結束時自動發送GG消息"
 }
