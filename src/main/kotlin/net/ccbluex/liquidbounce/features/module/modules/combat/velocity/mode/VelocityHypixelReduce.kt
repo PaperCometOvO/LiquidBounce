@@ -79,14 +79,6 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
                 hVelocity <= 1.125 -> ReduceTicksForHVelocity.hVelocity1dot0To1dot125
                 else -> ReduceTicksForHVelocity.hVelocity1dot125Plus
             }
-            target = if (ModuleKillAura.running && ModuleKillAura.targetTracker.target != null) {
-                ModuleKillAura.targetTracker.target
-            } else {
-                findEntityInCrosshair(
-                    ModuleKillAura.range.interactionRange.toDouble()
-                    ,RotationManager.currentRotation ?: player.rotation
-                ) { !it.isRemoved && it.shouldBeAttacked() }?.entity
-            }
         }
     }
 
@@ -95,6 +87,14 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
         if (reduceTicks > 0) {
             if (attackMode == AttackMode.PER_TICK) {
                 if (player.isSprinting && !player.isInLiquid) {
+                    target = if (ModuleKillAura.running && ModuleKillAura.targetTracker.target != null) {
+                        ModuleKillAura.targetTracker.target
+                    } else {
+                        findEntityInCrosshair(
+                            ModuleKillAura.range.interactionRange.toDouble()
+                            ,RotationManager.currentRotation ?: player.rotation
+                        ) { !it.isRemoved && it.shouldBeAttacked() }?.entity
+                    }
                     attackEntity(target!!, SwingMode.DO_NOT_HIDE, true)
                     player.deltaMovement = player.deltaMovement.multiply(
                         factorX = 0.6,
@@ -109,6 +109,14 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
                 }
             } else if (attackMode == AttackMode.ONE_TIME) {
                 for (i in 1..reduceTicks) {
+                    target = if (ModuleKillAura.running && ModuleKillAura.targetTracker.target != null) {
+                        ModuleKillAura.targetTracker.target
+                    } else {
+                        findEntityInCrosshair(
+                            ModuleKillAura.range.interactionRange.toDouble()
+                            ,RotationManager.currentRotation ?: player.rotation
+                        ) { !it.isRemoved && it.shouldBeAttacked() }?.entity
+                    }
                     attackEntity(target!!, SwingMode.DO_NOT_HIDE, true)
                     player.deltaMovement = player.deltaMovement.multiply(
                         factorX = 0.6,
