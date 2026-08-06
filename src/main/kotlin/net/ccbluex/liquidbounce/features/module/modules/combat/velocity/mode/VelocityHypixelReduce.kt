@@ -51,14 +51,14 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
         val hVelocity1dot125Plus by int("1dot125Plus", 9, 0..10)
     }
 
-    private val attackMode by enumChoice("AttackMode", AttackMode.PER_TICK)
-
     private var reduceTicks = 0
     private var target: Entity? = null
 
     init {
         tree(ReduceTicksForHVelocity)
     }
+
+    private val attackMode by enumChoice("AttackMode", AttackMode.PER_TICK)
 
     @Suppress("unused")
     private val packetHandler = handler<PacketEvent> { event ->
