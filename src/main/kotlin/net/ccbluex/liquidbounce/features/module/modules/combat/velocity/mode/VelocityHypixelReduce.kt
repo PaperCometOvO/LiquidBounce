@@ -38,17 +38,17 @@ import kotlin.math.hypot
 
 object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
     private object ReduceTicksForHVelocity : ValueGroup("ReduceTicksForHVelocity") {
-        val hVelocity0To0_0625 by int("0To0dot0625", 3, 0..10)
-        val hVelocity0_0625To0_125 by int("0dot0625To0dot125", 4, 0..10)
-        val hVelocity0_125To0_25 by int("0dot125To0dot25", 4, 0..10)
-        val hVelocity0_25To0_375 by int("0dot25To0dot375", 5, 0..10)
-        val hVelocity0_375To0_5 by int("0dot375To0dot5", 6, 0..10)
-        val hVelocity0_5To0_625 by int("0dot5To0dot625", 6, 0..10)
-        val hVelocity0_625To0_75 by int("0dot625To0dot75", 7, 0..10)
-        val hVelocity0_75To0_875 by int("0dot75To0dot875", 7, 0..10)
-        val hVelocity0_875To1_0 by int("0dot875To1dot0", 8, 0..10)
-        val hVelocity1_0To1_125 by int("1dot0To1dot125", 8, 0..10)
-        val hVelocity1_125Plus by int("1dot125Plus", 9, 0..10)
+        val hVelocity0To0dot0625 by int("0To0dot0625", 3, 0..10)
+        val hVelocity0dot0625To0dot125 by int("0dot0625To0dot125", 4, 0..10)
+        val hVelocity0dot125To0dot25 by int("0dot125To0dot25", 4, 0..10)
+        val hVelocity0dot25To0dot375 by int("0dot25To0dot375", 5, 0..10)
+        val hVelocity0dot375To0dot5 by int("0dot375To0dot5", 6, 0..10)
+        val hVelocity0dot5To0dot625 by int("0dot5To0dot625", 6, 0..10)
+        val hVelocity0dot625To0dot75 by int("0dot625To0dot75", 7, 0..10)
+        val hVelocity0dot75To0dot875 by int("0dot75To0dot875", 7, 0..10)
+        val hVelocity0dot875To1dot0 by int("0dot875To1dot0", 8, 0..10)
+        val hVelocity1dot0To1dot125 by int("1dot0To1dot125", 8, 0..10)
+        val hVelocity1dot125Plus by int("1dot125Plus", 9, 0..10)
     }
 
     private val attackMode by enumChoice("AttackMode", AttackMode.PER_TICK)
@@ -67,17 +67,17 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
         if (packet.isLocalPlayerVelocity(false)) {
             val hVelocity = hypot(player.deltaMovement.x, player.deltaMovement.z)
             reduceTicks = when {
-                hVelocity <= 0.0625 -> ReduceTicksForHVelocity.hVelocity0To0_0625
-                hVelocity <= 0.125 -> ReduceTicksForHVelocity.hVelocity0_0625To0_125
-                hVelocity <= 0.25 -> ReduceTicksForHVelocity.hVelocity0_125To0_25
-                hVelocity <= 0.375 -> ReduceTicksForHVelocity.hVelocity0_25To0_375
-                hVelocity <= 0.5 -> ReduceTicksForHVelocity.hVelocity0_375To0_5
-                hVelocity <= 0.625 -> ReduceTicksForHVelocity.hVelocity0_5To0_625
-                hVelocity <= 0.75 -> ReduceTicksForHVelocity.hVelocity0_625To0_75
-                hVelocity <= 0.875 -> ReduceTicksForHVelocity.hVelocity0_75To0_875
-                hVelocity <= 1.0 -> ReduceTicksForHVelocity.hVelocity0_875To1_0
-                hVelocity <= 1.125 -> ReduceTicksForHVelocity.hVelocity1_0To1_125
-                else -> ReduceTicksForHVelocity.hVelocity1_125Plus
+                hVelocity <= 0.0625 -> ReduceTicksForHVelocity.hVelocity0To0dot0625
+                hVelocity <= 0.125 -> ReduceTicksForHVelocity.hVelocity0dot0625To0dot125
+                hVelocity <= 0.25 -> ReduceTicksForHVelocity.hVelocity0dot125To0dot25
+                hVelocity <= 0.375 -> ReduceTicksForHVelocity.hVelocity0dot25To0dot375
+                hVelocity <= 0.5 -> ReduceTicksForHVelocity.hVelocity0dot375To0dot5
+                hVelocity <= 0.625 -> ReduceTicksForHVelocity.hVelocity0dot5To0dot625
+                hVelocity <= 0.75 -> ReduceTicksForHVelocity.hVelocity0dot625To0dot75
+                hVelocity <= 0.875 -> ReduceTicksForHVelocity.hVelocity0dot75To0dot875
+                hVelocity <= 1.0 -> ReduceTicksForHVelocity.hVelocity0dot875To1dot0
+                hVelocity <= 1.125 -> ReduceTicksForHVelocity.hVelocity1dot0To1dot125
+                else -> ReduceTicksForHVelocity.hVelocity1dot125Plus
             }
             target = if (ModuleKillAura.running && ModuleKillAura.targetTracker.target != null) {
                 ModuleKillAura.targetTracker.target
