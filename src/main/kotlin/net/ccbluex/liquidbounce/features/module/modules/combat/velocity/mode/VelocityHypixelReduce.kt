@@ -30,6 +30,7 @@ import net.ccbluex.liquidbounce.utils.block.SwingMode
 import net.ccbluex.liquidbounce.utils.combat.attackEntity
 import net.ccbluex.liquidbounce.utils.combat.shouldBeAttacked
 import net.ccbluex.liquidbounce.utils.entity.rotation
+import net.ccbluex.liquidbounce.utils.entity.squaredBoxedDistanceTo
 import net.ccbluex.liquidbounce.utils.math.multiply
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
 import net.ccbluex.liquidbounce.utils.raytracing.findEntityInCrosshair
@@ -93,32 +94,34 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
                     ,RotationManager.currentRotation ?: player.rotation
                 ) { !it.isRemoved && it.shouldBeAttacked() }?.entity
             }
-            if (attackMode == AttackMode.PER_TICK) {
-                if (player.isSprinting && !player.isInLiquid) {
-                    attackEntity(target!!, SwingMode.DO_NOT_HIDE, true)
-                    player.deltaMovement = player.deltaMovement.multiply(
-                        factorX = 0.6,
-                        factorZ = 0.6
-                    )
-                    player.isSprinting = false
-                }
+            if (target!!.squaredBoxedDistanceTo(player) < ModuleKillAura.range.interactionRange.toDouble()) {
+                if (attackMode == AttackMode.PER_TICK) {
+                    if (player.isSprinting && !player.isInLiquid) {
+                        attackEntity(target!!, SwingMode.DO_NOT_HIDE, true)
+                        player.deltaMovement = player.deltaMovement.multiply(
+                            factorX = 0.6,
+                            factorZ = 0.6
+                        )
+                        player.isSprinting = false
+                    }
 
-                reduceTicks--
-                if (reduceTicks == 0) {
+                    reduceTicks--
+                    if (reduceTicks == 0) {
+                        target = null
+                    }
+                } else if (attackMode == AttackMode.ONE_TIME) {
+                    for (i in 1..reduceTicks) {
+                        attackEntity(target!!, SwingMode.DO_NOT_HIDE, true)
+                        player.deltaMovement = player.deltaMovement.multiply(
+                            factorX = 0.6,
+                            factorZ = 0.6
+                        )
+                        player.isSprinting = false
+                    }
+
+                    reduceTicks = 0
                     target = null
                 }
-            } else if (attackMode == AttackMode.ONE_TIME) {
-                for (i in 1..reduceTicks) {
-                    attackEntity(target!!, SwingMode.DO_NOT_HIDE, true)
-                    player.deltaMovement = player.deltaMovement.multiply(
-                        factorX = 0.6,
-                        factorZ = 0.6
-                    )
-                    player.isSprinting = false
-                }
-
-                reduceTicks = 0
-                target = null
             }
         }
     }
