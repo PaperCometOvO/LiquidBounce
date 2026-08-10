@@ -60,9 +60,10 @@ internal object VelocityLag : VelocityMode("Lag") {
 
     @Suppress("unused")
     private val queuePacketHandler = handler<BlinkPacketEvent> { event ->
+        val packet = event.packet
         if (!shouldLag || event.origin != TransferOrigin.INCOMING) {
             return@handler
-        } else if (unchangedPing && event.packet is ClientboundKeepAlivePacket) {
+        } else if (unchangedPing && packet is ClientboundKeepAlivePacket) {
             return@handler
         }
 

@@ -25,13 +25,17 @@ import net.ccbluex.liquidbounce.event.events.GameTickEvent
 import net.ccbluex.liquidbounce.event.events.PacketEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
+import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager
 import net.ccbluex.liquidbounce.utils.block.SwingMode
+import net.ccbluex.liquidbounce.utils.client.chat
 import net.ccbluex.liquidbounce.utils.combat.attackEntity
 import net.ccbluex.liquidbounce.utils.combat.shouldBeAttacked
 import net.ccbluex.liquidbounce.utils.entity.rotation
 import net.ccbluex.liquidbounce.utils.entity.squaredBoxedDistanceTo
 import net.ccbluex.liquidbounce.utils.math.multiply
+import net.ccbluex.liquidbounce.utils.math.sq
+import net.ccbluex.liquidbounce.utils.network.isLocalPlayerDamage
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
 import net.ccbluex.liquidbounce.utils.raytracing.findEntityInCrosshair
 import net.minecraft.world.entity.Entity
@@ -54,6 +58,7 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
 
     private var reduceTicks = 0
     private var target: Entity? = null
+    private var receiveDamage = false
 
     init {
         tree(ReduceTicksForHVelocity)
@@ -61,11 +66,17 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
 
     private val attackMode by enumChoice("AttackMode", AttackMode.PER_TICK)
 
+    private val debug by boolean("Debug", false)
+
     @Suppress("unused")
     private val packetHandler = handler<PacketEvent> { event ->
         val packet = event.packet
 
-        if (packet.isLocalPlayerVelocity(false)) {
+        if (packet.isLocalPlayerDamage()) {
+            receiveDamage = true
+        }
+        if (packet.isLocalPlayerVelocity(true) && receiveDamage) {
+            receiveDamage = false
             val hVelocity = hypot(player.deltaMovement.x, player.deltaMovement.z)
             reduceTicks = when {
                 hVelocity <= 0.0625 -> ReduceTicksForHVelocity.hVelocity0To0dot0625
@@ -79,6 +90,10 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
                 hVelocity <= 1.0 -> ReduceTicksForHVelocity.hVelocity0dot875To1dot0
                 hVelocity <= 1.125 -> ReduceTicksForHVelocity.hVelocity1dot0To1dot125
                 else -> ReduceTicksForHVelocity.hVelocity1dot125Plus
+            }
+            if (debug) {
+                chat(translation("liquidbounce.module.velocity.messages.hypixelReduceHorizontalVelocity", hVelocity))
+                chat(translation("liquidbounce.module.velocity.messages.hypixelReduceSetReduceTicks", reduceTicks))
             }
         }
     }
@@ -94,8 +109,41 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
                     ,RotationManager.currentRotation ?: player.rotation
                 ) { !it.isRemoved && it.shouldBeAttacked() }?.entity
             }
-            if (target!!.squaredBoxedDistanceTo(player) < ModuleKillAura.range.interactionRange.toDouble()) {
-                if (attackMode == AttackMode.PER_TICK) {
+            if (attackMode == AttackMode.ONE_TIME) {
+                if (target != null
+                    && target!!.squaredBoxedDistanceTo(player) < ModuleKillAura.range.interactionRange.sq()) {
+                    for (i in 1..reduceTicks) {
+                        if (player.isSprinting && !player.isInLiquid) {
+                            attackEntity(target!!, SwingMode.DO_NOT_HIDE, true)
+                            player.deltaMovement = player.deltaMovement.multiply(
+                                factorX = 0.6,
+                                factorZ = 0.6
+                            )
+                            player.isSprinting = false
+                        }
+                    }
+
+                    if (debug) {
+                        chat(translation("liquidbounce.module.velocity.messages.hypixelReduceOneTimeAttack"
+                            ,reduceTicks))
+                    }
+
+                    reduceTicks = 0
+                    target = null
+                } else {
+                    reduceTicks = 0
+                    target = null
+
+                    if (debug) {
+                        chat(translation("liquidbounce.module.velocity.messages.hypixelReduceOneTimeDidNotAttack"
+                            ,reduceTicks))
+                    }
+                }
+            } else if (attackMode == AttackMode.PER_TICK) {
+                reduceTicks--
+
+                if (target != null
+                    && target!!.squaredBoxedDistanceTo(player) < ModuleKillAura.range.interactionRange.sq()) {
                     if (player.isSprinting && !player.isInLiquid) {
                         attackEntity(target!!, SwingMode.DO_NOT_HIDE, true)
                         player.deltaMovement = player.deltaMovement.multiply(
@@ -105,22 +153,23 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
                         player.isSprinting = false
                     }
 
-                    reduceTicks--
                     if (reduceTicks == 0) {
                         target = null
                     }
-                } else if (attackMode == AttackMode.ONE_TIME) {
-                    for (i in 1..reduceTicks) {
-                        attackEntity(target!!, SwingMode.DO_NOT_HIDE, true)
-                        player.deltaMovement = player.deltaMovement.multiply(
-                            factorX = 0.6,
-                            factorZ = 0.6
-                        )
-                        player.isSprinting = false
+
+                    if (debug) {
+                        chat(translation("liquidbounce.module.velocity.messages.hypixelReducePerTickAttack"
+                            ,reduceTicks))
+                    }
+                } else {
+                    if (reduceTicks == 0) {
+                        target = null
                     }
 
-                    reduceTicks = 0
-                    target = null
+                    if (debug) {
+                        chat(translation("liquidbounce.module.velocity.messages.hypixelReducePerTickDidNotAttack"
+                            ,reduceTicks))
+                    }
                 }
             }
         }
