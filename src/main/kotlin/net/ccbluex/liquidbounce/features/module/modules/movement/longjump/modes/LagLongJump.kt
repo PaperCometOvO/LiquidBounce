@@ -35,6 +35,7 @@ import net.ccbluex.liquidbounce.features.blink.PacketSnapshot
 import net.ccbluex.liquidbounce.features.module.modules.movement.longjump.ModuleLongJump
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.utils.client.chat
+import net.ccbluex.liquidbounce.utils.client.markAsError
 import net.ccbluex.liquidbounce.utils.client.regular
 import net.ccbluex.liquidbounce.utils.network.handlePacket
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
@@ -61,6 +62,7 @@ object LagLongJump : Mode("Lag") {
 
         if (packet is ClientboundPlayerPositionPacket) {
             shouldLag = false
+            chat(markAsError(translation("liquidbounce.module.longJump.messages.lagModeFlagged")))
             BlinkManager.flush(TransferOrigin.INCOMING)
             ModuleLongJump.enabled = false
         }
