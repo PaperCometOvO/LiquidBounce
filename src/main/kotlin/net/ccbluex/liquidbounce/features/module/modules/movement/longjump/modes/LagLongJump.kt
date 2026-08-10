@@ -38,6 +38,7 @@ import net.ccbluex.liquidbounce.utils.client.chat
 import net.ccbluex.liquidbounce.utils.client.regular
 import net.ccbluex.liquidbounce.utils.network.handlePacket
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
+import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket
 import org.lwjgl.glfw.GLFW
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -56,6 +57,12 @@ object LagLongJump : Mode("Lag") {
 
         if (packet.isLocalPlayerVelocity(true)) {
             shouldLag = true
+        }
+
+        if (packet is ClientboundPlayerPositionPacket) {
+            shouldLag = false
+            BlinkManager.flush(TransferOrigin.INCOMING)
+            ModuleLongJump.enabled = false
         }
     }
 
