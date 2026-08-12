@@ -65,8 +65,6 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
 
     private val debug by boolean("Debug", false)
 
-    private val heypixelMode by boolean("HeypixelMode", false)
-
     @Suppress("unused")
     private val packetHandler = handler<PacketEvent> { event ->
         val packet = event.packet
@@ -114,7 +112,7 @@ object VelocityHypixelReduce : VelocityMode("Hypixel Reduce") {
             if (target != null
                 && target!!.squaredBoxedDistanceTo(player) < ModuleKillAura.range.interactionRange.sq()) {
                 if (player.isSprinting && !player.isInLiquid) {
-                    attackEntity(target!!, SwingMode.DO_NOT_HIDE, !heypixelMode)
+                    attackEntity(target!!, SwingMode.DO_NOT_HIDE, true)
                     player.deltaMovement = player.deltaMovement.multiply(
                         factorX = 0.6,
                         factorZ = 0.6
