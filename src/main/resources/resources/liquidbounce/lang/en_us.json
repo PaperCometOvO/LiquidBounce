@@ -808,7 +808,6 @@
   "liquidbounce.module.longJump.messages.lagModeReceivePacket": "Received a velocity packet, Current velocity amount: %s",
   "liquidbounce.module.longJump.messages.lagModeReleasePacket": "Release a velocity packet. Current velocity amount: %s",
   "liquidbounce.module.longJump.messages.lagModeFlagged": "Disabled (flagged by anticheat)",
-  "liquidbounce.module.longJump.messages.lagModeNoLocalPackets": "There's no local velocity packets unexpectedly. Disabled",
   "liquidbounce.module.velocity.messages.hypixelReduceHorizontalVelocity": "Horizontal velocity: %s",
   "liquidbounce.module.velocity.messages.hypixelReduceSetReduceTicks": "Set reduce ticks to: %s",
   "liquidbounce.module.velocity.messages.hypixelReduceOneTimeAttack": "Attacked for %s times. Remaining reduce ticks: 0",
