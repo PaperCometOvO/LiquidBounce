@@ -805,6 +805,7 @@
   "liquidbounce.module.longJump.messages.lagModeReceivePacket": "收到一個velocity數據包。當前velocity總數: %s",
   "liquidbounce.module.longJump.messages.lagModeReleasePacket": "釋放一個velocity數據包。 當前velocity總數: %s",
   "liquidbounce.module.longJump.messages.lagModeFlagged": "已關閉（被反作弊標記）",
+  "liquidbounce.module.longJump.messages.lagModeNoLocalPackets": "意外地沒有velocity數據包。已關閉",
   "liquidbounce.module.velocity.messages.hypixelReduceHorizontalVelocity": "橫向擊退: %s",
   "liquidbounce.module.velocity.messages.hypixelReduceSetReduceTicks": "設置減KB刻爲: %s",
   "liquidbounce.module.velocity.messages.hypixelReduceOneTimeAttack": "攻擊了 %s 次。剩餘的減KB刻爲: 0",
