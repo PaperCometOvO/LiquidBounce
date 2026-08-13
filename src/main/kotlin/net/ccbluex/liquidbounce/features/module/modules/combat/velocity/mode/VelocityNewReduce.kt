@@ -104,7 +104,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         val lagInAir by boolean("LagInAir", true)
         val lagTargetRange by float("LagTargetRange", 6f, 0f..20f)
         val lagMaxDelay by int("LagMaxDelay", 30, 0..200, "ticks")
-        val unchangedPing by boolean("Unchanged Ping", true)
+        val unchangedPing by boolean("UnchangedPing", true)
         val requireKillAura by boolean("RequireKillAura", true)
     }
 
