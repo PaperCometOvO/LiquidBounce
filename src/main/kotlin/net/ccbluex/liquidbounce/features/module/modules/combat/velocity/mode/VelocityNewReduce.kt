@@ -32,6 +32,7 @@ import net.ccbluex.liquidbounce.event.events.TransferOrigin
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.event.sequenceHandler
 import net.ccbluex.liquidbounce.features.blink.BlinkManager
+import net.ccbluex.liquidbounce.features.blink.BlinkManager.Action
 import net.ccbluex.liquidbounce.features.blink.TrackedEntityPosition
 import net.ccbluex.liquidbounce.features.blink.esp.BlinkEspBox
 import net.ccbluex.liquidbounce.features.blink.esp.BlinkEspData
@@ -40,6 +41,7 @@ import net.ccbluex.liquidbounce.features.blink.esp.BlinkEspNone
 import net.ccbluex.liquidbounce.features.blink.esp.BlinkEspWireframe
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.ModuleVelocity
+import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityNewReduce.LagValueGroup.unchangedPing
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager
 import net.ccbluex.liquidbounce.utils.aiming.RotationTarget
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
@@ -102,6 +104,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         val lagInAir by boolean("LagInAir", true)
         val lagTargetRange by float("LagTargetRange", 6f, 0f..20f)
         val lagMaxDelay by int("LagMaxDelay", 30, 0..200, "ticks")
+        val unchangedPing by boolean("Unchanged Ping", true)
         val requireKillAura by boolean("RequireKillAura", true)
     }
 
@@ -231,9 +234,14 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
     @Suppress("unused")
     private val queuePacketHandler = handler<BlinkPacketEvent> { event ->
-        if (lagTicks >= 0 && event.origin == TransferOrigin.INCOMING && event.packet !is ClientboundKeepAlivePacket) {
-            event.action = BlinkManager.Action.QUEUE
+        val packet = event.packet
+        if (lagTicks >= 0 || event.origin != TransferOrigin.INCOMING) {
+            return@handler
+        } else if (unchangedPing && packet is ClientboundKeepAlivePacket) {
+            return@handler
         }
+
+        event.action = Action.QUEUE
     }
 
     @Suppress("unused")
