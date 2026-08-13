@@ -37,6 +37,7 @@ import net.ccbluex.liquidbounce.features.blink.esp.BlinkEspNone
 import net.ccbluex.liquidbounce.features.blink.esp.BlinkEspWireframe
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
+import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityNewReduce
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityReduce
 import net.ccbluex.liquidbounce.utils.client.Chronometer
 import net.ccbluex.liquidbounce.utils.client.inGame
@@ -110,6 +111,10 @@ object ModuleBacktrack : ClientModule("Backtrack", ModuleCategories.COMBAT) {
         }
 
         if (VelocityReduce.ownsIncomingBlinkQueue) {
+            return@handler
+        }
+
+        if (VelocityNewReduce.ownsIncomingBlinkQueue) {
             return@handler
         }
 
@@ -198,6 +203,10 @@ object ModuleBacktrack : ClientModule("Backtrack", ModuleCategories.COMBAT) {
         }
 
         if (VelocityReduce.ownsIncomingBlinkQueue) {
+            return@handler
+        }
+
+        if (VelocityNewReduce.ownsIncomingBlinkQueue) {
             return@handler
         }
 
@@ -300,7 +309,7 @@ object ModuleBacktrack : ClientModule("Backtrack", ModuleCategories.COMBAT) {
             chronometer.hasElapsed() &&
             !shouldPause() &&
             !attackChronometer.hasElapsed(lastAttackTimeToWork.toLong()) &&
-            !VelocityReduce.backtrackBlocked
+            !(VelocityReduce.backtrackBlocked || VelocityNewReduce.backtrackBlocked)
     }
 
     fun isLagging() = running && hasQueuedIncoming()
