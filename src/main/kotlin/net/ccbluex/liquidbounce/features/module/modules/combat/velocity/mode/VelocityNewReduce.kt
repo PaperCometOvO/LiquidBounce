@@ -93,7 +93,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         val attackMode by enumChoice("AttackMode", AttackMode.PER_TICK)
         val attackTargetRange by floatRange("AttackTargetRange", 2f..3f, 0f..6f)
         val keepSprintAttack by boolean("KeepSprintAttack", false)
-        val forceSetDirection by boolean("forceSetDirection", true)
+        val forceSetDirection by boolean("ForceSetDirection", true)
         val horizontal by float("Horizontal", 0.6f, 0f..1f)
         val vertical by float("Vertical", 0.6f, 0f..1f)
     }
