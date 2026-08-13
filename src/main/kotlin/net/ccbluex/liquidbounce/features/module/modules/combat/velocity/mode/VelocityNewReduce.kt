@@ -86,6 +86,10 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             val hVelocity1dot125Plus by int("1dot125Plus", 9, 0..10)
         }
 
+        init {
+            tree(ReduceTicksForHVelocity)
+        }
+
         val attackMode by enumChoice("AttackMode", AttackMode.PER_TICK)
         val attackTargetRange by floatRange("AttackTargetRange", 2f..3f, 0f..6f)
         val keepSprintAttack by boolean("KeepSprintAttack", false)
