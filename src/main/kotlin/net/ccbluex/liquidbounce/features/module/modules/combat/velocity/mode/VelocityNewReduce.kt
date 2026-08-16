@@ -299,7 +299,8 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             when {
                 lagTicks == 0 -> releaseReason = ReleaseReason.DELAY_END
                 player.abilities.flying -> releaseReason = ReleaseReason.SPECTATOR
-                renderTarget != null && renderTarget !in world.entitiesForRendering() -> releaseReason = ReleaseReason.OUT_OF_RANGE
+                renderTarget != null
+                    && renderTarget !in world.entitiesForRendering() -> releaseReason = ReleaseReason.OUT_OF_RANGE
                 renderTargetPos?.let { pos ->
                     player.distanceToSqr(pos.base) > LagValueGroup.scanTargetRange.sq()
                 } == true -> releaseReason = ReleaseReason.OUT_OF_RANGE
