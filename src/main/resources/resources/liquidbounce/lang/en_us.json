@@ -813,5 +813,17 @@
   "liquidbounce.module.velocity.messages.hypixelReduceOneTimeAttack": "Attacked for %s times. Remaining reduce ticks: 0",
   "liquidbounce.module.velocity.messages.hypixelReduceOneTimeDidNotAttack": "Didn't attack. Remaining reduce ticks: 0",
   "liquidbounce.module.velocity.messages.hypixelReducePerTickAttack": "Attacked. Remaining reduce ticks: %s",
-  "liquidbounce.module.velocity.messages.hypixelReducePerTickDidNotAttack": "Didn't attack. Remaining reduce ticks: %s"
+  "liquidbounce.module.velocity.messages.hypixelReducePerTickDidNotAttack": "Didn't attack. Remaining reduce ticks: %s",
+  "liquidbounce.module.velocity.messages.newReduceHorizontalVelocity": "Horizontal velocity: %s",
+  "liquidbounce.module.velocity.messages.newReduceSetAttackCount": "Set attack count to: %s",
+  "liquidbounce.module.velocity.messages.newReduceLagging": "Lagging...",
+  "liquidbounce.module.velocity.messages.newReduceReachTargetStopLagging": "Stop Lagging (reach target)",
+  "liquidbounce.module.velocity.messages.newReduceFlaggedStopLagging": "Stop Lagging (flagged by anticheat)",
+  "liquidbounce.module.velocity.messages.newReduceSpectatorStopLagging": "Stop Lagging (spectator)",
+  "liquidbounce.module.velocity.messages.newReduceOutOfRangeStopLagging": "Stop Lagging (out of range)",
+  "liquidbounce.module.velocity.messages.newReduceDelayEndStopLagging": "Stop Lagging (delay end)",
+  "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "Attacked for %s times. Remaining reduce ticks: 0",
+  "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack": "Didn't attack. Remaining reduce ticks: 0",
+  "liquidbounce.module.velocity.messages.newReducePerTickAttack": "Attacked. Remaining reduce ticks: %s",
+  "liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack": "Didn't attack. Remaining reduce ticks: %s"
 }

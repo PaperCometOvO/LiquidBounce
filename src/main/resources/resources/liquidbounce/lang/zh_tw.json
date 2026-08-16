@@ -810,5 +810,17 @@
   "liquidbounce.module.velocity.messages.hypixelReduceOneTimeAttack": "攻擊了 %s 次。剩餘的減KB刻爲: 0",
   "liquidbounce.module.velocity.messages.hypixelReduceOneTimeDidNotAttack": "沒有攻擊。剩餘的減KB刻爲: 0",
   "liquidbounce.module.velocity.messages.hypixelReducePerTickAttack": "已攻擊。剩餘的減KB刻爲: %s",
-  "liquidbounce.module.velocity.messages.hypixelReducePerTickDidNotAttack": "沒有攻擊。剩餘的減KB刻爲: %s"
+  "liquidbounce.module.velocity.messages.hypixelReducePerTickDidNotAttack": "沒有攻擊。剩餘的減KB刻爲: %s",
+  "liquidbounce.module.velocity.messages.newReduceHorizontalVelocity": "橫向擊退: %s",
+  "liquidbounce.module.velocity.messages.newReduceSetAttackCount": "設置攻擊次數爲: %s",
+  "liquidbounce.module.velocity.messages.newReduceLagging": "延遲中...",
+  "liquidbounce.module.velocity.messages.newReduceReachTargetStopLagging": "停止延遲（達到目標）",
+  "liquidbounce.module.velocity.messages.newReduceFlagStopLagging": "停止延遲（被反作弊標記）",
+  "liquidbounce.module.velocity.messages.newReduceSpectatorStopLagging": "停止延遲（觀察者）",
+  "liquidbounce.module.velocity.messages.newReduceOutOfRangeStopLagging": "停止延遲（超出範圍）",
+  "liquidbounce.module.velocity.messages.newReduceDelayEndStopLagging": "停止延遲（延遲時間結束）",
+  "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "攻擊了 %s 次。剩餘的減KB刻爲: 0",
+  "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack": "沒有攻擊。剩餘的減KB刻爲: 0",
+  "liquidbounce.module.velocity.messages.newReducePerTickAttack": "已攻擊。剩餘的減KB刻爲: %s",
+  "liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack": "沒有攻擊。剩餘的減KB刻爲: %s"
 }
