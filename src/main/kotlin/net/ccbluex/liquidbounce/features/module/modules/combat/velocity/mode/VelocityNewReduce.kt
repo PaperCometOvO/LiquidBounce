@@ -129,10 +129,9 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
     private object Debug : ToggleableValueGroup(this, "Debug", false) {
         fun notify(message: MutableComponent) {
-            if (!this.enabled) {
-                return
+            if (this.enabled) {
+                chat(message)
             }
-            chat(message)
         }
     }
 
