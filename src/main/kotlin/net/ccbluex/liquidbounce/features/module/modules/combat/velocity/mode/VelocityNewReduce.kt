@@ -101,6 +101,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
     private object LagValueGroup : ToggleableValueGroup(this, "Lag", true) {
         val mode by enumChoice("Mode", LagMode.IN_AIR)
+        val flushOnLandingWithTarget by boolean("FlushOnLandingWithTarget", true)
         val scanTargetRange by float("ScanTargetRange", 6f, 0f..20f)
         val maxDelay by int("MaxDelay", 30, 0..200, "ticks")
         val unchangedPing by boolean("UnchangedPing", true)
@@ -165,10 +166,10 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private var releaseReason: ReleaseReason? = null
 
     val backtrackBlocked: Boolean
-        get() = lagTicks > 0 || attackCount > 0
+        get() = shouldLag || attackCount > 0
 
     val ownsIncomingBlinkQueue: Boolean
-        get() = lagTicks > 0
+        get() = shouldLag
 
     private val isInAir: Boolean
         get() = !player.onGround() && !player.isInLiquid
@@ -298,13 +299,13 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             when {
                 lagTicks == 0 -> releaseReason = ReleaseReason.DELAY_END
                 player.abilities.flying -> releaseReason = ReleaseReason.SPECTATOR
-                renderTarget !in world.entitiesForRendering() -> releaseReason = ReleaseReason.OUT_OF_RANGE
+                renderTarget != null && renderTarget !in world.entitiesForRendering() -> releaseReason = ReleaseReason.OUT_OF_RANGE
                 renderTargetPos?.let { pos ->
                     player.distanceToSqr(pos.base) > LagValueGroup.scanTargetRange.sq()
                 } == true -> releaseReason = ReleaseReason.OUT_OF_RANGE
-                target != null && (LagValueGroup.mode == LagMode.IN_AIR && !isInAir) -> {
+                target != null && (LagValueGroup.mode == LagMode.IN_AIR && LagValueGroup.flushOnLandingWithTarget && !isInAir) -> {
                     setAttackCount()
-                    releaseReason = ReleaseReason.REACH_TARGET
+                    releaseReason = ReleaseReason.LANDING_WITH_TARGET
                 }
             }
         }
@@ -472,5 +473,6 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         SPECTATOR("Spectator"),
         OUT_OF_RANGE("OutOfRange"),
         DELAY_END("DelayEnd"),
+        LANDING_WITH_TARGET("LandingWithTarget")
     }
 }

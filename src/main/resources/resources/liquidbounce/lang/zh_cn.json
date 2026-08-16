@@ -812,6 +812,7 @@
   "liquidbounce.module.velocity.messages.newReduceSpectatorStopLagging": "停止延迟（观察者）",
   "liquidbounce.module.velocity.messages.newReduceOutOfRangeStopLagging": "停止延迟（超出范围）",
   "liquidbounce.module.velocity.messages.newReduceDelayEndStopLagging": "停止延迟（延迟时间结束）",
+  "liquidbounce.module.velocity.messages.newReduceLandingWithTargetStopLagging": "停止延迟（落地且有目标）",
   "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "攻击了 %s 次。剩余的减KB刻为: 0",
   "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack": "没有攻击。剩余的减KB刻为: 0",
   "liquidbounce.module.velocity.messages.newReducePerTickAttack": "已攻击。剩余的减KB刻为: %s",

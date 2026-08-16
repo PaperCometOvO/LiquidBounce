@@ -822,6 +822,7 @@
   "liquidbounce.module.velocity.messages.newReduceSpectatorStopLagging": "Stop Lagging (spectator)",
   "liquidbounce.module.velocity.messages.newReduceOutOfRangeStopLagging": "Stop Lagging (out of range)",
   "liquidbounce.module.velocity.messages.newReduceDelayEndStopLagging": "Stop Lagging (delay end)",
+  "liquidbounce.module.velocity.messages.newReduceLandingWithTargetStopLagging": "Stop Lagging (landing with target)",
   "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "Attacked for %s times. Remaining reduce ticks: 0",
   "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack": "Didn't attack. Remaining reduce ticks: 0",
   "liquidbounce.module.velocity.messages.newReducePerTickAttack": "Attacked. Remaining reduce ticks: %s",
