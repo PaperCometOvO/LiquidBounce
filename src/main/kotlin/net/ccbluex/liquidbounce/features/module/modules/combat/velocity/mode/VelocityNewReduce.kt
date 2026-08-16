@@ -303,7 +303,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 renderTargetPos?.let { pos ->
                     player.distanceToSqr(pos.base) > LagValueGroup.scanTargetRange.sq()
                 } == true -> releaseReason = ReleaseReason.OUT_OF_RANGE
-                target != null && (LagValueGroup.mode == LagMode.IN_AIR && LagValueGroup.flushOnLandingWithTarget && !isInAir) -> {
+                target != null && (LagValueGroup.flushOnLandingWithTarget && !isInAir) -> {
                     setAttackCount()
                     releaseReason = ReleaseReason.LANDING_WITH_TARGET
                 }
