@@ -191,12 +191,14 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 setAttackCount()
                 Debug.notify(
                     translation(
-                        "liquidbounce.module.velocity.messages.newReduceHorizontalVelocity", hVelocity
+                        "liquidbounce.module.velocity.messages.newReduceHorizontalVelocity",
+                        hVelocity
                     )
                 )
                 Debug.notify(
                     translation(
-                        "liquidbounce.module.velocity.messages.newReduceSetAttackCount", attackCount
+                        "liquidbounce.module.velocity.messages.newReduceSetAttackCount",
+                        attackCount
                     )
                 )
             }
@@ -211,14 +213,18 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                     if (isInAir) {
                         wasInAir = true
                     }
-                    Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceLagging"))
+                    Debug.notify(translation(
+                        "liquidbounce.module.velocity.messages.newReduceLagging")
+                    )
                 } else if (ModuleKillAura.running) {
                     shouldLag = true
                     lagTicks = LagValueGroup.maxDelay
                     if (isInAir) {
                         wasInAir = true
                     }
-                    Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceLagging"))
+                    Debug.notify(translation(
+                        "liquidbounce.module.velocity.messages.newReduceLagging")
+                    )
                 }
             }
         }
@@ -265,12 +271,16 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                         }
 
                         if (attackResults.size == attackCount) {
-                            Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceOneTimeAttack"
-                                ,attackCount))
+                            Debug.notify(translation(
+                                "liquidbounce.module.velocity.messages.newReduceOneTimeAttack"
+                                ,attackCount)
+                            )
                         } else {
                             Debug.notify(translation(
                                 "liquidbounce.module.velocity.messages.newReduceOneTimeCorruptAttack"
-                                ,attackResults.size, attackResults - attackResults.size))
+                                ,attackResults.size
+                                ,attackResults - attackResults.size)
+                            )
                         }
 
                         attackCount = 0
@@ -278,7 +288,8 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                     } else {
                         attackCount = 0
                         target = null
-                        Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack"
+                        Debug.notify(translation(
+                            "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack"
                             ,attackCount))
                     }
                 }
@@ -296,20 +307,25 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                         }
 
                         if (attackResult) {
-                            Debug.notify(translation("liquidbounce.module.velocity.messages.newReducePerTickAttack"
+                            Debug.notify(translation(
+                                "liquidbounce.module.velocity.messages.newReducePerTickAttack"
                                 ,attackCount)
                             )
                         } else {
-                            Debug.notify(translation("liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack"
-                                ,attackCount))
+                            Debug.notify(translation(
+                                "liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack"
+                                ,attackCount)
+                            )
                         }
                     }
                     else {
                         if (attackCount == 0) {
                             target = null
                         }
-                        Debug.notify(translation("liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack"
-                            ,attackCount))
+                        Debug.notify(translation(
+                            "liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack"
+                            ,attackCount)
+                        )
                     }
                 }
             }
@@ -345,10 +361,14 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             resetRenderState()
             if (releaseReason == ReleaseReason.REACH_TARGET) {
                 setAttackCount()
-                Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceReachTargetStopLagging"))
+                Debug.notify(translation(
+                    "liquidbounce.module.velocity.messages.newReduceReachTargetStopLagging")
+                )
             } else {
-                Debug.notify(translation("liquidbounce.module.velocity.messages.newReduce"
-                    + releaseReason!!.tag + "StopLagging"))
+                Debug.notify(translation(
+                    "liquidbounce.module.velocity.messages.newReduce"
+                    + releaseReason!!.tag + "StopLagging")
+                )
             }
             releaseReason = null
         }
