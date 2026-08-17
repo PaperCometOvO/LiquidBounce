@@ -158,8 +158,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private var target: Entity? = null
     private var renderTarget: Entity? = null
     private var renderTargetPos: TrackedEntityPosition? = null
-    var attackCount = 0
-        private set
+    private var attackCount = 0
     private var receiveDamage = false
     private var shouldLag = false
     private var lagTicks = 0
@@ -187,21 +186,6 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             val hVelocity = hypot(player.deltaMovement.x, player.deltaMovement.z)
             findTarget()
 
-            if (target != null) {
-                setAttackCount()
-                Debug.notify(
-                    translation(
-                        "liquidbounce.module.velocity.messages.newReduceHorizontalVelocity",
-                        hVelocity
-                    )
-                )
-                Debug.notify(
-                    translation(
-                        "liquidbounce.module.velocity.messages.newReduceSetAttackCount",
-                        attackCount
-                    )
-                )
-            }
             if (LagValueGroup.enabled && (LagValueGroup.mode == LagMode.ALWAYS
                     || (LagValueGroup.mode == LagMode.IN_AIR && isInAir))) {
                 if (renderTarget != null) {
@@ -226,6 +210,22 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                         "liquidbounce.module.velocity.messages.newReduceLagging")
                     )
                 }
+            }
+
+            if (target != null && !shouldLag) {
+                setAttackCount()
+                Debug.notify(
+                    translation(
+                        "liquidbounce.module.velocity.messages.newReduceHorizontalVelocity",
+                        hVelocity
+                    )
+                )
+                Debug.notify(
+                    translation(
+                        "liquidbounce.module.velocity.messages.newReduceSetAttackCount",
+                        attackCount
+                    )
+                )
             }
         }
 
@@ -343,11 +343,8 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 renderTargetPos?.let { pos ->
                     player.distanceToSqr(pos.base) > LagValueGroup.scanTargetRange.sq()
                 } == true -> releaseReason = ReleaseReason.OUT_OF_RANGE
-                target != null && (LagValueGroup.flushOnLandingWithTarget && wasInAir && !isInAir) -> {
-                    setAttackCount()
-                    wasInAir = false
+                target != null && (LagValueGroup.flushOnLandingWithTarget && wasInAir && !isInAir) ->
                     releaseReason = ReleaseReason.LANDING_WITH_TARGET
-                }
             }
         }
     }
@@ -359,16 +356,59 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             lagTicks = 0
             BlinkManager.flush(TransferOrigin.INCOMING)
             resetRenderState()
-            if (releaseReason == ReleaseReason.REACH_TARGET) {
-                setAttackCount()
-                Debug.notify(translation(
-                    "liquidbounce.module.velocity.messages.newReduceReachTargetStopLagging")
-                )
-            } else {
-                Debug.notify(translation(
-                    "liquidbounce.module.velocity.messages.newReduce"
-                    + releaseReason!!.tag + "StopLagging")
-                )
+            when (releaseReason) {
+                ReleaseReason.LANDING_WITH_TARGET -> {
+                    setAttackCount()
+                    Debug.notify(
+                        translation(
+                            "liquidbounce.module.velocity.messages.newReduceLandingWithTargetStopLagging"
+                        )
+                    )
+
+                    val hVelocity = hypot(player.deltaMovement.x, player.deltaMovement.z)
+                    Debug.notify(
+                        translation(
+                            "liquidbounce.module.velocity.messages.newReduceHorizontalVelocity",
+                            hVelocity
+                        )
+                    )
+                    Debug.notify(
+                        translation(
+                            "liquidbounce.module.velocity.messages.newReduceSetAttackCount",
+                            attackCount
+                        )
+                    )
+                }
+                ReleaseReason.DELAY_END -> {
+                    setAttackCount()
+                    Debug.notify(
+                        translation(
+                            "liquidbounce.module.velocity.messages.newReduceDelayEndStopLagging"
+                        )
+                    )
+
+                    val hVelocity = hypot(player.deltaMovement.x, player.deltaMovement.z)
+                    Debug.notify(
+                        translation(
+                            "liquidbounce.module.velocity.messages.newReduceHorizontalVelocity",
+                            hVelocity
+                        )
+                    )
+                    Debug.notify(
+                        translation(
+                            "liquidbounce.module.velocity.messages.newReduceSetAttackCount",
+                            attackCount
+                        )
+                    )
+                }
+                else -> {
+                    Debug.notify(
+                        translation(
+                            "liquidbounce.module.velocity.messages.newReduce"
+                                + releaseReason!!.tag + "StopLagging"
+                        )
+                    )
+                }
             }
             releaseReason = null
         }
@@ -516,7 +556,6 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     }
 
     private enum class ReleaseReason(override val tag: String) : Tagged {
-        REACH_TARGET("ReachTarget"),
         FLAGGED("Flagged"),
         SPECTATOR("Spectator"),
         OUT_OF_RANGE("OutOfRange"),
