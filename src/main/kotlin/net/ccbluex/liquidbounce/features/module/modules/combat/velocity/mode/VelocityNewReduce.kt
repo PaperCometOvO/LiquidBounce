@@ -263,6 +263,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                         for (i in 1..attackCount) {
                             attackResults.add(attackCurrentTarget(target!!))
                         }
+
                         if (attackResults.size == attackCount) {
                             Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceOneTimeAttack"
                                 ,attackCount))
@@ -270,6 +271,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                             Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceOneTimeCorruptAttack"
                                 ,attackResults.size, attackResults - attackResults.size))
                         }
+
                         attackCount = 0
                         target = null
                     } else {
@@ -402,6 +404,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         if (!shouldLag) {
             renderTarget = target
         }
+
         if (target == null) {
             val nearestEntity = world.entitiesForRendering()
                 .filterIsInstance<LivingEntity> { !it.isRemoved && it.shouldBeAttacked() }
