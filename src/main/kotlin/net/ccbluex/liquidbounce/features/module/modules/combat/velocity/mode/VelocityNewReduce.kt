@@ -268,7 +268,8 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                             Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceOneTimeAttack"
                                 ,attackCount))
                         } else {
-                            Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceOneTimeCorruptAttack"
+                            Debug.notify(translation(
+                                "liquidbounce.module.velocity.messages.newReduceOneTimeCorruptAttack"
                                 ,attackResults.size, attackResults - attackResults.size))
                         }
 
