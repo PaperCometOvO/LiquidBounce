@@ -164,6 +164,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private var shouldLag = false
     private var lagTicks = 0
     private var releaseReason: ReleaseReason? = null
+    private var wasInAir = false
 
     val backtrackBlocked: Boolean
         get() = shouldLag || attackCount > 0
@@ -207,10 +208,16 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 if (!LagValueGroup.requireKillAura) {
                     shouldLag = true
                     lagTicks = LagValueGroup.maxDelay
+                    if (isInAir) {
+                        wasInAir = true
+                    }
                     Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceLagging"))
                 } else if (ModuleKillAura.running) {
                     shouldLag = true
                     lagTicks = LagValueGroup.maxDelay
+                    if (isInAir) {
+                        wasInAir = true
+                    }
                     Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceLagging"))
                 }
             }
@@ -252,13 +259,19 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 AttackMode.ONE_TIME -> {
                     if (target!!.squaredBoxedDistanceTo(player)
                         <= AttackValueGroup.attackTargetRange.endInclusive.sq()) {
+                        val attackResults = ArrayList<Boolean>()
                         for (i in 1..attackCount) {
-                            attackCurrentTarget(target!!)
+                            attackResults.add(attackCurrentTarget(target!!))
+                        }
+                        if (attackResults.size == attackCount) {
+                            Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceOneTimeAttack"
+                                ,attackCount))
+                        } else {
+                            Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceOneTimeCorruptAttack"
+                                ,attackResults.size, attackResults - attackResults.size))
                         }
                         attackCount = 0
                         target = null
-                        Debug.notify(translation("liquidbounce.module.velocity.messages.newReduceOneTimeAttack"
-                            ,attackCount))
                     } else {
                         attackCount = 0
                         target = null
@@ -274,12 +287,19 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                         if (AutoRotate.canRotate) {
                             rotate(target!!)
                         }
-                        attackCurrentTarget(target!!)
+                        val attackResult = attackCurrentTarget(target!!)
                         if (attackCount == 0) {
                             target = null
                         }
-                        Debug.notify(translation("liquidbounce.module.velocity.messages.newReducePerTickAttack"
-                            ,attackCount))
+
+                        if (attackResult) {
+                            Debug.notify(translation("liquidbounce.module.velocity.messages.newReducePerTickAttack"
+                                ,attackCount)
+                            )
+                        } else {
+                            Debug.notify(translation("liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack"
+                                ,attackCount))
+                        }
                     }
                     else {
                         if (attackCount == 0) {
@@ -304,8 +324,9 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 renderTargetPos?.let { pos ->
                     player.distanceToSqr(pos.base) > LagValueGroup.scanTargetRange.sq()
                 } == true -> releaseReason = ReleaseReason.OUT_OF_RANGE
-                target != null && (LagValueGroup.flushOnLandingWithTarget && !isInAir) -> {
+                target != null && (LagValueGroup.flushOnLandingWithTarget && wasInAir && !isInAir) -> {
                     setAttackCount()
+                    wasInAir = false
                     releaseReason = ReleaseReason.LANDING_WITH_TARGET
                 }
             }
@@ -358,14 +379,16 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         releaseReason = null
     }
 
-    private fun attackCurrentTarget(targetEntity: Entity) {
+    private fun attackCurrentTarget(targetEntity: Entity) : Boolean {
         if (player.isSprinting) {
             attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, true)
             player.deltaMovement = player.deltaMovement.multiply(
                 AttackValueGroup.horizontal, AttackValueGroup.vertical, AttackValueGroup.horizontal
             )
             player.isSprinting = false
+            return true
         }
+        return false
     }
 
     private fun findTarget() {

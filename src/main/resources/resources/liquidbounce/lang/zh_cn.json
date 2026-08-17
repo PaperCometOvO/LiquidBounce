@@ -798,12 +798,6 @@
   "liquidbounce.module.longJump.messages.lagModeReceivePacket": "收到一个velocity数据包。当前velocity总数: %s",
   "liquidbounce.module.longJump.messages.lagModeReleasePacket": "释放一个velocity数据包。 当前velocity总数: %s",
   "liquidbounce.module.longJump.messages.lagModeFlagged": "已关闭（被反作弊标记）",
-  "liquidbounce.module.velocity.messages.hypixelReduceHorizontalVelocity": "横向击退: %s",
-  "liquidbounce.module.velocity.messages.hypixelReduceSetReduceTicks": "设置减KB刻为: %s",
-  "liquidbounce.module.velocity.messages.hypixelReduceOneTimeAttack": "攻击了 %s 次。剩余的减KB刻为: 0",
-  "liquidbounce.module.velocity.messages.hypixelReduceOneTimeDidNotAttack": "没有攻击。剩余的减KB刻为: 0",
-  "liquidbounce.module.velocity.messages.hypixelReducePerTickAttack": "已攻击。剩余的减KB刻为: %s",
-  "liquidbounce.module.velocity.messages.hypixelReducePerTickDidNotAttack": "没有攻击。剩余的减KB刻为: %s",
   "liquidbounce.module.velocity.messages.newReduceHorizontalVelocity": "横向击退: %s",
   "liquidbounce.module.velocity.messages.newReduceSetAttackCount": "设置攻击次数为: %s",
   "liquidbounce.module.velocity.messages.newReduceLagging": "延迟中...",
@@ -813,8 +807,9 @@
   "liquidbounce.module.velocity.messages.newReduceOutOfRangeStopLagging": "停止延迟（超出范围）",
   "liquidbounce.module.velocity.messages.newReduceDelayEndStopLagging": "停止延迟（延迟时间结束）",
   "liquidbounce.module.velocity.messages.newReduceLandingWithTargetStopLagging": "停止延迟（落地且有目标）",
-  "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "攻击了 %s 次。剩余的减KB刻为: 0",
-  "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack": "没有攻击。剩余的减KB刻为: 0",
-  "liquidbounce.module.velocity.messages.newReducePerTickAttack": "已攻击。剩余的减KB刻为: %s",
-  "liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack": "没有攻击。剩余的减KB刻为: %s"
+  "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "攻击了 %s 次。剩余的攻击次数为：0",
+  "liquidbounce.module.velocity.messages.newReduceOneTimeCorruptAttack": "攻击了 %s 次，没有攻击 %s 次，剩余的攻击次数为：0",
+  "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack": "没有攻击。剩余的攻击次数为：0",
+  "liquidbounce.module.velocity.messages.newReducePerTickAttack": "已攻击。剩余的攻击次数为：%s",
+  "liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack": "没有攻击。剩余的攻击次数为：%s"
 }

@@ -808,12 +808,6 @@
   "liquidbounce.module.longJump.messages.lagModeReceivePacket": "Received a velocity packet, Current velocity amount: %s",
   "liquidbounce.module.longJump.messages.lagModeReleasePacket": "Release a velocity packet. Current velocity amount: %s",
   "liquidbounce.module.longJump.messages.lagModeFlagged": "Disabled (flagged by anticheat)",
-  "liquidbounce.module.velocity.messages.hypixelReduceHorizontalVelocity": "Horizontal velocity: %s",
-  "liquidbounce.module.velocity.messages.hypixelReduceSetReduceTicks": "Set reduce ticks to: %s",
-  "liquidbounce.module.velocity.messages.hypixelReduceOneTimeAttack": "Attacked for %s times. Remaining reduce ticks: 0",
-  "liquidbounce.module.velocity.messages.hypixelReduceOneTimeDidNotAttack": "Didn't attack. Remaining reduce ticks: 0",
-  "liquidbounce.module.velocity.messages.hypixelReducePerTickAttack": "Attacked. Remaining reduce ticks: %s",
-  "liquidbounce.module.velocity.messages.hypixelReducePerTickDidNotAttack": "Didn't attack. Remaining reduce ticks: %s",
   "liquidbounce.module.velocity.messages.newReduceHorizontalVelocity": "Horizontal velocity: %s",
   "liquidbounce.module.velocity.messages.newReduceSetAttackCount": "Set attack count to: %s",
   "liquidbounce.module.velocity.messages.newReduceLagging": "Lagging...",
@@ -823,8 +817,9 @@
   "liquidbounce.module.velocity.messages.newReduceOutOfRangeStopLagging": "Stop Lagging (out of range)",
   "liquidbounce.module.velocity.messages.newReduceDelayEndStopLagging": "Stop Lagging (delay end)",
   "liquidbounce.module.velocity.messages.newReduceLandingWithTargetStopLagging": "Stop Lagging (landing with target)",
-  "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "Attacked for %s times. Remaining reduce ticks: 0",
-  "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack": "Didn't attack. Remaining reduce ticks: 0",
-  "liquidbounce.module.velocity.messages.newReducePerTickAttack": "Attacked. Remaining reduce ticks: %s",
-  "liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack": "Didn't attack. Remaining reduce ticks: %s"
+  "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "Attacked for %s times. Remaining attack count: 0",
+  "liquidbounce.module.velocity.messages.newReduceOneTimeCorruptAttack": "Attacked for %s times. Didn't attack for %s times. Remaining attack count: 0",
+  "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack": "Didn't attack. Remaining attack count: 0",
+  "liquidbounce.module.velocity.messages.newReducePerTickAttack": "Attacked. Remaining attack count: %s",
+  "liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack": "Didn't attack. Remaining attack count: %s"
 }

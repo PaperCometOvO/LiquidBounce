@@ -33,7 +33,6 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.Vel
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityGrim2344
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityGrim2371
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityHylex
-import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityHypixelReduce
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityIntave
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityJumpReset
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityLag
@@ -67,7 +66,6 @@ object ModuleVelocity : ClientModule("Velocity", ModuleCategories.COMBAT, aliase
             VelocityNewReduce,
 
             // Server modes
-            VelocityHypixelReduce,
             VelocityDexland,
             VelocityHylex,
             VelocityBlocksMC,
