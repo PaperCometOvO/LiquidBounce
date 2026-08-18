@@ -255,15 +255,11 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     @Suppress("unused")
     private val tickHandler = handler<GameTickEvent> {
         if (attackCount > 0) {
-            if (target == null || target !in world.entitiesForRendering()) {
-                attackCount = 0
-                target = null
-                return@handler
-            }
-
             when (AttackValueGroup.mode) {
                 AttackMode.ONE_TIME -> {
-                    if (target!!.squaredBoxedDistanceTo(player)
+                    if (target != null
+                        && target in world.entitiesForRendering()
+                        && target!!.squaredBoxedDistanceTo(player)
                         <= AttackValueGroup.attackTargetRange.endInclusive.sq()) {
                         val attackResults = ArrayList<Boolean>()
                         for (i in 1..attackCount) {
@@ -296,7 +292,9 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 AttackMode.PER_TICK -> {
                     attackCount--
 
-                    if (target!!.squaredBoxedDistanceTo(player)
+                    if (target != null
+                        && target in world.entitiesForRendering()
+                        && target!!.squaredBoxedDistanceTo(player)
                         <= AttackValueGroup.attackTargetRange.endInclusive.sq()) {
                         if (AutoRotate.canRotate) {
                             rotate(target!!)
