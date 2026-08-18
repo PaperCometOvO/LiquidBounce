@@ -466,7 +466,8 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
             renderTarget = nearestEntity
             if (nearestEntity != null && shouldLag && AutoRotate.canRotate
-                && nearestEntity.squaredBoxedDistanceTo(player) <= ModuleKillAura.range.interactionRange.toDouble().sq()) {
+                && nearestEntity.squaredBoxedDistanceTo(player)
+                <= ModuleKillAura.range.interactionRange.toDouble().sq()) {
                 rotate(nearestEntity)
                 target = nearestEntity
             }
