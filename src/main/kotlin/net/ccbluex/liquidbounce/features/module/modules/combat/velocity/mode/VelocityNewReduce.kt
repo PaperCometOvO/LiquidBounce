@@ -93,7 +93,6 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         }
 
         val mode by enumChoice("Mode", AttackMode.PER_TICK)
-        val attackTargetRange by floatRange("AttackTargetRange", 2f..3f, 0f..6f)
         val forceSetDirection by boolean("ForceSetDirection", true)
         val horizontal by float("Horizontal", 0.6f, 0f..1f)
         val vertical by float("Vertical", 0.6f, 0f..1f)
@@ -255,12 +254,11 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     @Suppress("unused")
     private val tickHandler = handler<GameTickEvent> {
         if (attackCount > 0) {
+            findTarget()
+
             when (AttackValueGroup.mode) {
                 AttackMode.ONE_TIME -> {
-                    if (target != null
-                        && target in world.entitiesForRendering()
-                        && target!!.squaredBoxedDistanceTo(player)
-                        <= AttackValueGroup.attackTargetRange.endInclusive.sq()) {
+                    if (target != null && target in world.entitiesForRendering()) {
                         val attackResults = ArrayList<Boolean>()
                         for (i in 1..attackCount) {
                             attackResults.add(attackCurrentTarget(target!!))
@@ -292,10 +290,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 AttackMode.PER_TICK -> {
                     attackCount--
 
-                    if (target != null
-                        && target in world.entitiesForRendering()
-                        && target!!.squaredBoxedDistanceTo(player)
-                        <= AttackValueGroup.attackTargetRange.endInclusive.sq()) {
+                    if (target != null && target in world.entitiesForRendering()) {
                         if (AutoRotate.canRotate) {
                             rotate(target!!)
                         }
@@ -456,7 +451,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         if (trySetKillAuraTargetAsTarget()) return
 
         target = findEntityInCrosshair(
-            AttackValueGroup.attackTargetRange.endInclusive.toDouble(),
+            ModuleKillAura.range.interactionRange.toDouble(),
             RotationManager.currentRotation ?: player.rotation
         ) { !it.isRemoved && it.shouldBeAttacked() }?.entity
 
@@ -471,8 +466,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
             renderTarget = nearestEntity
             if (nearestEntity != null && shouldLag && AutoRotate.canRotate
-                && nearestEntity.squaredBoxedDistanceTo(player) <= AttackValueGroup.attackTargetRange.endInclusive.sq()
-            ) {
+                && nearestEntity.squaredBoxedDistanceTo(player) <= ModuleKillAura.range.interactionRange.toDouble().sq()) {
                 rotate(nearestEntity)
                 target = nearestEntity
             }
@@ -529,13 +523,12 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
     private fun trySetKillAuraTargetAsTarget(): Boolean {
         if (ModuleKillAura.running && ModuleKillAura.targetTracker.target != null) {
-            val killAuraTarget = ModuleKillAura.targetTracker.target
             if (!shouldLag) {
-                renderTarget = killAuraTarget
+                renderTarget = ModuleKillAura.targetTracker.target
             }
-            if (killAuraTarget!!.squaredBoxedDistanceTo(player)
-                <= AttackValueGroup.attackTargetRange.endInclusive.sq()) {
-                target = killAuraTarget
+            if (ModuleKillAura.targetTracker.target!!.squaredBoxedDistanceTo(player)
+                <= ModuleKillAura.range.interactionRange.toDouble().sq()) {
+                target = ModuleKillAura.targetTracker.target
             }
             return true
         } else {
