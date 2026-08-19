@@ -95,7 +95,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         val mode by enumChoice("Mode", AttackMode.PER_TICK)
         val forceSetDirection by boolean("ForceSetDirection", true)
         val attackWhen by enumChoice("AttackWhen", AttackWhen.NOT_SPRINTING)
-        val forceAdaptRequirement by boolean("ForceAdaptRequirement", true)
+        val forceAdaptSprintRequirement by boolean("ForceAdaptSprintRequirement", true)
         val noVanillaAttack by boolean("NoVanillaAttack", false)
         val horizontalVelocity by float("HorizontalVelocity", 0.6f, 0f..1f)
         val verticalVelocity by float("VerticalVelocity", 0.6f, 0f..1f)
@@ -440,7 +440,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
     private fun attackCurrentTarget(targetEntity: Entity) : Boolean {
         if (AttackValueGroup.attackWhen == AttackWhen.NOT_SPRINTING) {
-            if (AttackValueGroup.forceAdaptRequirement && player.isSprinting) {
+            if (AttackValueGroup.forceAdaptSprintRequirement && player.isSprinting) {
                 player.isSprinting = false
             }
 
@@ -452,7 +452,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 return true
             }
         } else if (AttackValueGroup.attackWhen == AttackWhen.SPRINTING) {
-            if (AttackValueGroup.forceAdaptRequirement && !player.isSprinting) {
+            if (AttackValueGroup.forceAdaptSprintRequirement && !player.isSprinting) {
                 player.isSprinting = true
             }
 
