@@ -95,10 +95,10 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         val mode by enumChoice("Mode", AttackMode.PER_TICK)
         val forceSetDirection by boolean("ForceSetDirection", true)
         val attackWhen by enumChoice("AttackWhen", AttackWhen.NOT_SPRINTING)
-        val forceAdaptSprintState by boolean("ForceAdaptSprintState", true)
+        val forceAdaptRequirement by boolean("ForceAdaptRequirement", true)
         val noVanillaAttack by boolean("NoVanillaAttack", false)
-        val horizontal by float("Horizontal", 0.6f, 0f..1f)
-        val vertical by float("Vertical", 0.6f, 0f..1f)
+        val horizontalVelocity by float("HorizontalVelocity", 0.6f, 0f..1f)
+        val verticalVelocity by float("VerticalVelocity", 0.6f, 0f..1f)
     }
 
     private object LagValueGroup : ToggleableValueGroup(this, "Lag", true) {
@@ -440,26 +440,26 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
     private fun attackCurrentTarget(targetEntity: Entity) : Boolean {
         if (AttackValueGroup.attackWhen == AttackWhen.NOT_SPRINTING) {
-            if (AttackValueGroup.forceAdaptSprintState && player.isSprinting) {
+            if (AttackValueGroup.forceAdaptRequirement && player.isSprinting) {
                 player.isSprinting = false
             }
 
             if (!player.isSprinting) {
                 attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, AttackValueGroup.noVanillaAttack)
                 player.deltaMovement = player.deltaMovement.multiply(
-                    AttackValueGroup.horizontal, AttackValueGroup.vertical, AttackValueGroup.horizontal
+                    AttackValueGroup.horizontalVelocity, AttackValueGroup.verticalVelocity, AttackValueGroup.horizontalVelocity
                 )
                 return true
             }
         } else if (AttackValueGroup.attackWhen == AttackWhen.SPRINTING) {
-            if (AttackValueGroup.forceAdaptSprintState && !player.isSprinting) {
+            if (AttackValueGroup.forceAdaptRequirement && !player.isSprinting) {
                 player.isSprinting = true
             }
 
             if (player.isSprinting) {
                 attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, AttackValueGroup.noVanillaAttack)
                 player.deltaMovement = player.deltaMovement.multiply(
-                    AttackValueGroup.horizontal, AttackValueGroup.vertical, AttackValueGroup.horizontal
+                    AttackValueGroup.horizontalVelocity, AttackValueGroup.verticalVelocity, AttackValueGroup.horizontalVelocity
                 )
                 player.isSprinting = false
                 return true
@@ -467,7 +467,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         } else if (AttackValueGroup.attackWhen == AttackWhen.NO_REQUIREMENT){
             attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, AttackValueGroup.noVanillaAttack)
             player.deltaMovement = player.deltaMovement.multiply(
-                AttackValueGroup.horizontal, AttackValueGroup.vertical, AttackValueGroup.horizontal
+                AttackValueGroup.horizontalVelocity, AttackValueGroup.verticalVelocity, AttackValueGroup.horizontalVelocity
             )
 
             if (player.isSprinting) {
