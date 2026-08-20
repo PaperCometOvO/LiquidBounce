@@ -441,6 +441,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         releaseReason = null
     }
 
+    @Suppress("CognitiveComplexMethod")
     private fun attackCurrentTarget(targetEntity: Entity) : Boolean {
         if (AttackValueGroup.AttackStrategy.attackWhen == AttackWhen.NOT_SPRINTING) {
             if (AttackValueGroup.AttackStrategy.forceAdaptAttackWhen && player.isSprinting) {
