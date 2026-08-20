@@ -599,12 +599,6 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         NO_REQUIREMENT("NoRequirement")
     }
 
-    private enum class ReduceWhen(override val tag: String) : Tagged {
-        NOT_SPRINTING("NotSprinting"),
-        SPRINTING("Sprinting"),
-        NO_REQUIREMENT("NoRequirement")
-    }
-
     private enum class FinalSprintState(override val tag: String) : Tagged {
         NOT_SPRINTING("NotSprinting"),
         SPRINTING("Sprinting"),
@@ -614,6 +608,12 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private enum class LagMode(override val tag: String) : Tagged {
         ALWAYS("Always"),
         IN_AIR("InAir")
+    }
+
+    private enum class ReduceWhen(override val tag: String) : Tagged {
+        NOT_SPRINTING("NotSprinting"),
+        SPRINTING("Sprinting"),
+        NO_REQUIREMENT("NoRequirement")
     }
 
     private enum class ReleaseReason(override val tag: String) : Tagged {
