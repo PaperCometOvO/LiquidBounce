@@ -101,7 +101,6 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private object LagValueGroup : ToggleableValueGroup(this, "Lag", true) {
         val mode by enumChoice("Mode", LagMode.IN_AIR)
         val flushOnLandingWithTarget by boolean("FlushOnLandingWithTarget", true)
-        val scanTargetRange by float("ScanTargetRange", 6f, 0f..20f)
         val maxDelay by int("MaxDelay", 30, 0..200, "ticks")
         val unchangedPing by boolean("UnchangedPing", true)
         val requireKillAura by boolean("RequireKillAura", true)
@@ -332,10 +331,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 lagTicks == 0 -> releaseReason = ReleaseReason.DELAY_END
                 player.abilities.flying -> releaseReason = ReleaseReason.SPECTATOR
                 renderTarget != null
-                    && renderTarget !in world.entitiesForRendering() -> releaseReason = ReleaseReason.OUT_OF_RANGE
-                renderTargetPos?.let { pos ->
-                    player.distanceToSqr(pos.base) > LagValueGroup.scanTargetRange.sq()
-                } == true -> releaseReason = ReleaseReason.OUT_OF_RANGE
+                    && renderTarget !in world.entitiesForRendering() -> releaseReason = ReleaseReason.LOSE_TARGET
                 target != null && (LagValueGroup.flushOnLandingWithTarget && wasInAir && !isInAir) ->
                     releaseReason = ReleaseReason.LANDING_WITH_TARGET
             }
@@ -552,7 +548,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private enum class ReleaseReason(override val tag: String) : Tagged {
         FLAGGED("Flagged"),
         SPECTATOR("Spectator"),
-        OUT_OF_RANGE("OutOfRange"),
+        LOSE_TARGET("LoseTarget"),
         DELAY_END("DelayEnd"),
         LANDING_WITH_TARGET("LandingWithTarget")
     }

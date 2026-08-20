@@ -811,7 +811,7 @@
   "liquidbounce.module.velocity.messages.newReduceReachTargetStopLagging": "停止延遲（達到目標）",
   "liquidbounce.module.velocity.messages.newReduceFlagStopLagging": "停止延遲（被反作弊標記）",
   "liquidbounce.module.velocity.messages.newReduceSpectatorStopLagging": "停止延遲（觀察者）",
-  "liquidbounce.module.velocity.messages.newReduceOutOfRangeStopLagging": "停止延遲（超出範圍）",
+  "liquidbounce.module.velocity.messages.newReduceLoseTargetStopLagging": "停止延遲（失去目標）",
   "liquidbounce.module.velocity.messages.newReduceDelayEndStopLagging": "停止延遲（延遲時間結束）",
   "liquidbounce.module.velocity.messages.newReduceLandingWithTargetStopLagging": "停止延遲（落地且有目標）",
   "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "攻擊了 %s 次。剩餘的攻擊次數爲：0",
