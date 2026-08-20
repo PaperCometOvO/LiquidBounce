@@ -608,7 +608,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private enum class FinalSprintState(override val tag: String) : Tagged {
         NOT_SPRINTING("NotSprinting"),
         SPRINTING("Sprinting"),
-        DO_NOT_CHANGE("DoNotChange")
+        @Suppress("unused") DO_NOT_CHANGE("DoNotChange")
     }
 
     private enum class LagMode(override val tag: String) : Tagged {
