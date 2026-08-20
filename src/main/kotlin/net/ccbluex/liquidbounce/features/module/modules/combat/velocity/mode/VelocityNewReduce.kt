@@ -88,12 +88,22 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             val hVelocity1dot125Plus by int("1dot125Plus", 9, 0..10)
         }
 
+        object AttackStrategy : ValueGroup("AttackStrategy") {
+            val attackWhen by enumChoice("AttackWhen", AttackWhen.NOT_SPRINTING)
+            val forceAdaptAttackWhen by boolean("ForceAdaptAttackWhen", true)
+            val reduceWhen by enumChoice("ReduceWhen", ReduceWhen.SPRINTING)
+            val forceAdaptReduceWhen by boolean("ForceAdaptReduceWhen", false)
+            val finalSprintState by enumChoice("FinalSprintState", FinalSprintState.NOT_SPRINTING)
+        }
+
         init {
             tree(AttackCountForHVelocity)
+            tree(AttackStrategy)
         }
 
         val mode by enumChoice("Mode", AttackMode.PER_TICK)
         val forceSetDirection by boolean("ForceSetDirection", true)
+        val noVanillaAttack by boolean("NoVanillaAttack", false)
         val horizontalVelocityReduction by float("HorizontalVelocityReduction", 0.6f, 0f..1f)
         val verticalVelocityReduction by float("VerticalVelocityReduction", 1.0f, 0f..1f)
     }
@@ -101,7 +111,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private object LagValueGroup : ToggleableValueGroup(this, "Lag", true) {
         val mode by enumChoice("Mode", LagMode.IN_AIR)
         val flushOnLandingWithTarget by boolean("FlushOnLandingWithTarget", true)
-        val maxDelay by int("MaxDelay", 30, 0..200, "ticks")
+        val maxDelay by int("MaxDelay", 30, 0..20, "ticks")
         val unchangedPing by boolean("UnchangedPing", true)
         val requireKillAura by boolean("RequireKillAura", true)
     }
@@ -432,17 +442,60 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     }
 
     private fun attackCurrentTarget(targetEntity: Entity) : Boolean {
-        if (player.isSprinting) {
-            attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, true)
+        if (AttackValueGroup.AttackStrategy.attackWhen == AttackWhen.NOT_SPRINTING) {
+            if (AttackValueGroup.AttackStrategy.forceAdaptAttackWhen && player.isSprinting) {
+                player.isSprinting = false
+            }
+            if (!player.isSprinting) {
+                attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, AttackValueGroup.noVanillaAttack)
+            }
+        } else if (AttackValueGroup.AttackStrategy.attackWhen == AttackWhen.SPRINTING) {
+            if (AttackValueGroup.AttackStrategy.forceAdaptAttackWhen && !player.isSprinting) {
+                player.isSprinting = true
+            }
+            if (player.isSprinting) {
+                attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, AttackValueGroup.noVanillaAttack)
+            }
+        } else if (AttackValueGroup.AttackStrategy.attackWhen == AttackWhen.NO_REQUIREMENT) {
+            attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, AttackValueGroup.noVanillaAttack)
+        }
+
+        if (AttackValueGroup.AttackStrategy.reduceWhen == ReduceWhen.NOT_SPRINTING) {
+            if (AttackValueGroup.AttackStrategy.forceAdaptReduceWhen && player.isSprinting) {
+                player.isSprinting = false
+            }
+            if (!player.isSprinting) {
+                player.deltaMovement = player.deltaMovement.multiply(
+                    AttackValueGroup.horizontalVelocityReduction,
+                    AttackValueGroup.verticalVelocityReduction,
+                    AttackValueGroup.horizontalVelocityReduction
+                )
+            }
+        } else if (AttackValueGroup.AttackStrategy.reduceWhen == ReduceWhen.SPRINTING) {
+            if (AttackValueGroup.AttackStrategy.forceAdaptReduceWhen && !player.isSprinting) {
+                player.isSprinting = true
+            }
+            if (player.isSprinting) {
+                player.deltaMovement = player.deltaMovement.multiply(
+                    AttackValueGroup.horizontalVelocityReduction,
+                    AttackValueGroup.verticalVelocityReduction,
+                    AttackValueGroup.horizontalVelocityReduction
+                )
+            }
+        } else if (AttackValueGroup.AttackStrategy.reduceWhen == ReduceWhen.NO_REQUIREMENT) {
             player.deltaMovement = player.deltaMovement.multiply(
                 AttackValueGroup.horizontalVelocityReduction,
                 AttackValueGroup.verticalVelocityReduction,
                 AttackValueGroup.horizontalVelocityReduction
             )
-            player.isSprinting = false
-            return true
         }
-        return false
+
+        if (AttackValueGroup.AttackStrategy.finalSprintState == FinalSprintState.NOT_SPRINTING) {
+            player.isSprinting = false
+        } else if (AttackValueGroup.AttackStrategy.finalSprintState == FinalSprintState.SPRINTING) {
+            player.isSprinting = true
+        }
+        return true
     }
 
     private fun findTarget() {
@@ -538,6 +591,24 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private enum class AttackMode(override val tag: String) : Tagged {
         ONE_TIME("OneTime"),
         PER_TICK("PerTick")
+    }
+
+    private enum class AttackWhen(override val tag: String) : Tagged {
+        NOT_SPRINTING("NotSprinting"),
+        SPRINTING("Sprinting"),
+        NO_REQUIREMENT("NoRequirement")
+    }
+
+    private enum class ReduceWhen(override val tag: String) : Tagged {
+        NOT_SPRINTING("NotSprinting"),
+        SPRINTING("Sprinting"),
+        NO_REQUIREMENT("NoRequirement")
+    }
+
+    private enum class FinalSprintState(override val tag: String) : Tagged {
+        NOT_SPRINTING("NotSprinting"),
+        SPRINTING("Sprinting"),
+        DO_NOT_CHANGE("DoNotChange")
     }
 
     private enum class LagMode(override val tag: String) : Tagged {
