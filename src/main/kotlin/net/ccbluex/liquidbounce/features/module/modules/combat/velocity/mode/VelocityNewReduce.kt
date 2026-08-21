@@ -88,22 +88,12 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             val hVelocity1dot125Plus by int("1dot125Plus", 9, 0..10)
         }
 
-        object AttackStrategy : ValueGroup("AttackStrategy") {
-            val attackWhen by enumChoice("AttackWhen", AttackWhen.NOT_SPRINTING)
-            val forceAdaptAttackWhen by boolean("ForceAdaptAttackWhen", true)
-            val reduceWhen by enumChoice("ReduceWhen", ReduceWhen.SPRINTING)
-            val forceAdaptReduceWhen by boolean("ForceAdaptReduceWhen", false)
-            val finalSprintState by enumChoice("FinalSprintState", FinalSprintState.NOT_SPRINTING)
-        }
-
         init {
             tree(AttackCountForHVelocity)
-            tree(AttackStrategy)
         }
 
         val mode by enumChoice("Mode", AttackMode.PER_TICK)
         val forceSetDirection by boolean("ForceSetDirection", true)
-        val noVanillaAttack by boolean("NoVanillaAttack", false)
         val horizontalVelocityReduction by float("HorizontalVelocityReduction", 0.6f, 0f..1f)
         val verticalVelocityReduction by float("VerticalVelocityReduction", 1.0f, 0f..1f)
     }
@@ -441,63 +431,16 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         releaseReason = null
     }
 
-    @Suppress("CognitiveComplexMethod")
     private fun attackCurrentTarget(targetEntity: Entity) : Boolean {
-        if (AttackValueGroup.AttackStrategy.attackWhen == AttackWhen.NOT_SPRINTING) {
-            if (AttackValueGroup.AttackStrategy.forceAdaptAttackWhen && player.isSprinting) {
-                player.isSprinting = false
-            }
-            if (!player.isSprinting) {
-                attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, AttackValueGroup.noVanillaAttack)
-            }
-        } else if (AttackValueGroup.AttackStrategy.attackWhen == AttackWhen.SPRINTING) {
-            if (AttackValueGroup.AttackStrategy.forceAdaptAttackWhen && !player.isSprinting) {
-                player.isSprinting = true
-            }
-            if (player.isSprinting) {
-                attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, AttackValueGroup.noVanillaAttack)
-            }
-        } else if (AttackValueGroup.AttackStrategy.attackWhen == AttackWhen.NO_REQUIREMENT) {
-            attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, AttackValueGroup.noVanillaAttack)
-        }
-
-        if (AttackValueGroup.AttackStrategy.reduceWhen == ReduceWhen.NOT_SPRINTING) {
-            if (AttackValueGroup.AttackStrategy.forceAdaptReduceWhen && player.isSprinting) {
-                player.isSprinting = false
-            }
-            if (!player.isSprinting) {
-                player.deltaMovement = player.deltaMovement.multiply(
-                    AttackValueGroup.horizontalVelocityReduction,
-                    AttackValueGroup.verticalVelocityReduction,
-                    AttackValueGroup.horizontalVelocityReduction
-                )
-                return true
-            }
-        } else if (AttackValueGroup.AttackStrategy.reduceWhen == ReduceWhen.SPRINTING) {
-            if (AttackValueGroup.AttackStrategy.forceAdaptReduceWhen && !player.isSprinting) {
-                player.isSprinting = true
-            }
-            if (player.isSprinting) {
-                player.deltaMovement = player.deltaMovement.multiply(
-                    AttackValueGroup.horizontalVelocityReduction,
-                    AttackValueGroup.verticalVelocityReduction,
-                    AttackValueGroup.horizontalVelocityReduction
-                )
-                return true
-            }
-        } else if (AttackValueGroup.AttackStrategy.reduceWhen == ReduceWhen.NO_REQUIREMENT) {
+        if (player.isSprinting) {
+            attackEntity(targetEntity, SwingMode.DO_NOT_HIDE, true)
             player.deltaMovement = player.deltaMovement.multiply(
                 AttackValueGroup.horizontalVelocityReduction,
                 AttackValueGroup.verticalVelocityReduction,
                 AttackValueGroup.horizontalVelocityReduction
             )
-            return true
-        }
-
-        if (AttackValueGroup.AttackStrategy.finalSprintState == FinalSprintState.NOT_SPRINTING) {
             player.isSprinting = false
-        } else if (AttackValueGroup.AttackStrategy.finalSprintState == FinalSprintState.SPRINTING) {
-            player.isSprinting = true
+            return true
         }
         return false
     }
@@ -597,27 +540,9 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         PER_TICK("PerTick")
     }
 
-    private enum class AttackWhen(override val tag: String) : Tagged {
-        NOT_SPRINTING("NotSprinting"),
-        SPRINTING("Sprinting"),
-        NO_REQUIREMENT("NoRequirement")
-    }
-
-    private enum class FinalSprintState(override val tag: String) : Tagged {
-        NOT_SPRINTING("NotSprinting"),
-        SPRINTING("Sprinting"),
-        @Suppress("unused") DO_NOT_CHANGE("DoNotChange")
-    }
-
     private enum class LagMode(override val tag: String) : Tagged {
         ALWAYS("Always"),
         IN_AIR("InAir")
-    }
-
-    private enum class ReduceWhen(override val tag: String) : Tagged {
-        NOT_SPRINTING("NotSprinting"),
-        SPRINTING("Sprinting"),
-        NO_REQUIREMENT("NoRequirement")
     }
 
     private enum class ReleaseReason(override val tag: String) : Tagged {
