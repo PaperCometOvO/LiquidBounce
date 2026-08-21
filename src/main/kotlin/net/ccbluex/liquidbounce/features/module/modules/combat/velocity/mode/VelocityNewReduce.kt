@@ -471,6 +471,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                     AttackValueGroup.verticalVelocityReduction,
                     AttackValueGroup.horizontalVelocityReduction
                 )
+                return true
             }
         } else if (AttackValueGroup.AttackStrategy.reduceWhen == ReduceWhen.SPRINTING) {
             if (AttackValueGroup.AttackStrategy.forceAdaptReduceWhen && !player.isSprinting) {
@@ -482,6 +483,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                     AttackValueGroup.verticalVelocityReduction,
                     AttackValueGroup.horizontalVelocityReduction
                 )
+                return true
             }
         } else if (AttackValueGroup.AttackStrategy.reduceWhen == ReduceWhen.NO_REQUIREMENT) {
             player.deltaMovement = player.deltaMovement.multiply(
@@ -489,6 +491,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 AttackValueGroup.verticalVelocityReduction,
                 AttackValueGroup.horizontalVelocityReduction
             )
+            return true
         }
 
         if (AttackValueGroup.AttackStrategy.finalSprintState == FinalSprintState.NOT_SPRINTING) {
@@ -496,7 +499,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         } else if (AttackValueGroup.AttackStrategy.finalSprintState == FinalSprintState.SPRINTING) {
             player.isSprinting = true
         }
-        return true
+        return false
     }
 
     private fun findTarget() {
