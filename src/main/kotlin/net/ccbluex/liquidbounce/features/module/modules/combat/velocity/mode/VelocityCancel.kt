@@ -26,6 +26,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket
 
 object VelocityCancel : VelocityMode("Cancel") {
     private val cancelSetback by boolean("CancelSetback", false)
+
     @Suppress("unused")
     private val packetHandler = handler<PacketEvent> { event ->
         val packet = event.packet
