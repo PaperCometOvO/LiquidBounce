@@ -18,10 +18,18 @@
  */
 package net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode
 
+import net.ccbluex.liquidbounce.config.types.group.ToggleableValueGroup
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.config.utils.percentageChance
+import net.ccbluex.liquidbounce.event.events.BlinkPacketEvent
+import net.ccbluex.liquidbounce.event.events.GameTickEvent
 import net.ccbluex.liquidbounce.event.events.PacketEvent
+import net.ccbluex.liquidbounce.event.events.TickPacketProcessEvent
+import net.ccbluex.liquidbounce.event.events.TransferOrigin
 import net.ccbluex.liquidbounce.event.handler
+import net.ccbluex.liquidbounce.event.sequenceHandler
+import net.ccbluex.liquidbounce.features.blink.BlinkManager
+import net.ccbluex.liquidbounce.features.blink.BlinkManager.Action
 import net.ccbluex.liquidbounce.features.module.modules.player.nofall.modes.NoFallBlink
 import net.ccbluex.liquidbounce.utils.entity.anyHorizontal
 import net.minecraft.network.protocol.common.ServerboundPongPacket
@@ -43,8 +51,17 @@ internal object VelocityModify : VelocityMode("Modify") {
     private val onlyMove by boolean("OnlyMove", false)
     private val transactionBufferAmount by int("TransactionBuffer", 0, 0..3)
     private val considerExplosion by boolean("ConsiderExplosion", true)
+    private object Blink : ToggleableValueGroup(this, "Blink", false) {
+        val time by intRange("Time", 2..3, 1..10, "ticks")
+    }
+
+    init {
+        tree(Blink)
+    }
 
     private var transactionBuffer = 0
+    private var shouldBlink = false
+    private var blinkTicks = 0
 
     override fun disable() {
         super.disable()
@@ -86,6 +103,11 @@ internal object VelocityModify : VelocityMode("Modify") {
                     packet.movement.y = currentVelocity.y * motionVertical
                 }
 
+                if (Blink.enabled) {
+                    shouldBlink = true
+                    blinkTicks = Blink.time.random()
+                }
+
                 NoFallBlink.waitUntilGround = true
                 transactionBuffer += transactionBufferAmount
             }
@@ -112,6 +134,31 @@ internal object VelocityModify : VelocityMode("Modify") {
                 event.cancelEvent()
                 transactionBuffer--
             }
+        }
+    }
+
+    @Suppress("unused")
+    private val queuePacketHandler = handler<BlinkPacketEvent> { event ->
+        val packet = event.packet
+        if (!shouldBlink || event.origin != TransferOrigin.OUTGOING) {
+            return@handler
+        }
+
+        event.action = Action.QUEUE
+    }
+
+    @Suppress("unused")
+    private val tickHandler = handler<GameTickEvent> {
+        if (shouldBlink) {
+            blinkTicks--
+        }
+    }
+
+    @Suppress("unused")
+    private val tickPacketProcessHandler = sequenceHandler<TickPacketProcessEvent> {
+        if (shouldBlink && blinkTicks == 0) {
+            shouldBlink = false
+            BlinkManager.flush(TransferOrigin.OUTGOING)
         }
     }
 
