@@ -29,7 +29,6 @@ import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityAAC442
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityBlocksMC
-import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityCancel
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityDexland
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityGrim2344
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityGrim2371
@@ -65,7 +64,6 @@ object ModuleVelocity : ClientModule("Velocity", ModuleCategories.COMBAT, aliase
             VelocityLag,
             VelocityReduce,
             VelocityNewReduce,
-            VelocityCancel,
 
             // Server modes
             VelocityDexland,
