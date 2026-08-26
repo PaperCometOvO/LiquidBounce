@@ -45,7 +45,7 @@ class WorldRenderEvent(
     val renderTarget: RenderTarget,
 ) : Event(), AutoCloseable {
 
-    @Deprecated("For scripts only")
+    @Deprecated("For scripts only", ReplaceWith("poseStack"))
     val matrixStack get() = poseStack
 
     private val batchCollector = BatchCollector()
@@ -68,6 +68,7 @@ class WorldRenderEvent(
  */
 @Tag("worldFeatureSubmit")
 class WorldFeatureSubmitEvent(
+    val poseStack: PoseStack,
     val camera: Camera,
     val submitNodeStorage: SubmitNodeStorage,
     val modelViewMatrix: Matrix4fc,
