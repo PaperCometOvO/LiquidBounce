@@ -38,7 +38,7 @@ object VelocityZeqa : VelocityMode("Zeqa") {
         }
 
         if (packet is ClientboundSetEntityMotionPacket && packet.id == player.id) {
-            player.deltaMovement.withStrafe(strafeSpeed.toDouble(), strafeStrength.toDouble())
+            player.deltaMovement = player.deltaMovement.withStrafe(strafeSpeed.toDouble(), strafeStrength.toDouble())
 
             packet.movement.x = packet.movement.x * 0.5
             packet.movement.y = packet.movement.y * 0.3
