@@ -93,7 +93,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         }
 
         val mode by enumChoice("Mode", AttackMode.PER_TICK)
-        val forceSetDirection by boolean("ForceSetDirection", true)
+        val forceForward by boolean("ForceForward", true)
         val horizontalVelocityReduction by float("HorizontalVelocityReduction", 0.6f, 0f..1f)
         val verticalVelocityReduction by float("VerticalVelocityReduction", 1.0f, 0f..1f)
     }
@@ -405,7 +405,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
     @Suppress("unused")
     private val movementInputEventHandler = handler<MovementInputEvent> { event ->
-        if (attackCount > 0 && AttackValueGroup.forceSetDirection) {
+        if (attackCount > 0 && AttackValueGroup.forceForward) {
             event.directionalInput = DirectionalInput.FORWARDS
         }
     }
@@ -439,7 +439,6 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 AttackValueGroup.verticalVelocityReduction,
                 AttackValueGroup.horizontalVelocityReduction
             )
-            player.isSprinting = false
             return true
         }
         return false
