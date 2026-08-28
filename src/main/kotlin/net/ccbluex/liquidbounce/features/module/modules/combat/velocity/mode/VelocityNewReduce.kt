@@ -101,10 +101,12 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private object LagValueGroup : ToggleableValueGroup(this, "Lag", true) {
         val mode by enumChoice("Mode", LagMode.IN_AIR)
         val flushOnLandingWithTarget by boolean("FlushOnLandingWithTarget", true)
-        val scanTargetRange by int("ScanTargetRange", 6, 0..10)
+        val scanTargetRange by floatRange("ScanTargetRange", 0.0f..6.0f, 0.0f..10.0f)
         val maxDelay by int("MaxDelay", 30, 0..20, "ticks")
         val unchangedPing by boolean("UnchangedPing", true)
         val requireKillAura by boolean("RequireKillAura", true)
+
+        val scanTargetRangeSq = scanTargetRange.start.sq()..scanTargetRange.endInclusive.sq()
     }
 
     private object AutoRotate : ToggleableValueGroup(this, "AutoRotate", true) {
@@ -192,7 +194,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 }
 
                 if (renderTarget != null
-                    && renderTarget!!.squaredBoxedDistanceTo(player) <= LagValueGroup.scanTargetRange.sq()
+                    && (renderTarget!!.squaredBoxedDistanceTo(player) in LagValueGroup.scanTargetRangeSq)
                 ) {
                     if (!LagValueGroup.requireKillAura) {
                         shouldLag = true
@@ -341,7 +343,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 lagTicks == 0 -> releaseReason = ReleaseReason.DELAY_END
                 player.abilities.flying -> releaseReason = ReleaseReason.SPECTATOR
                 renderTarget != null
-                    && renderTarget!!.squaredBoxedDistanceTo(player) > LagValueGroup.scanTargetRange.sq() ->
+                    && renderTarget!!.squaredBoxedDistanceTo(player) !in LagValueGroup.scanTargetRange ->
                         releaseReason = ReleaseReason.LOSE_TARGET
                 renderTarget != null
                     && renderTarget !in world.entitiesForRendering() -> releaseReason = ReleaseReason.LOSE_TARGET
