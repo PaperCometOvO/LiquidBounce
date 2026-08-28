@@ -190,6 +190,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 if (renderTarget != null) {
                     renderTargetPos = TrackedEntityPosition(renderTarget!!)
                 }
+
                 if (renderTarget != null
                     && renderTarget!!.squaredBoxedDistanceTo(player) <= LagValueGroup.scanTargetRange.sq()
                 ) {
