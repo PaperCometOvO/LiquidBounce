@@ -341,7 +341,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 lagTicks == 0 -> releaseReason = ReleaseReason.DELAY_END
                 player.abilities.flying -> releaseReason = ReleaseReason.SPECTATOR
                 renderTarget != null
-                    && renderTarget!!.squaredBoxedDistanceTo(player) > LagValueGroup.scanTargetRange ->
+                    && renderTarget!!.squaredBoxedDistanceTo(player) > LagValueGroup.scanTargetRange.sq() ->
                         releaseReason = ReleaseReason.LOSE_TARGET
                 renderTarget != null
                     && renderTarget !in world.entitiesForRendering() -> releaseReason = ReleaseReason.LOSE_TARGET
