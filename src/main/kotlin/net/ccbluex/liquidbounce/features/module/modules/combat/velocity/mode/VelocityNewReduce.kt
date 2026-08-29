@@ -343,10 +343,10 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 lagTicks == 0 -> releaseReason = ReleaseReason.DELAY_END
                 player.abilities.flying -> releaseReason = ReleaseReason.SPECTATOR
                 renderTarget != null
-                    && renderTarget!!.squaredBoxedDistanceTo(player) !in LagValueGroup.scanTargetRange ->
-                        releaseReason = ReleaseReason.LOSE_TARGET
+                    && renderTarget!!.squaredBoxedDistanceTo(player) !in LagValueGroup.scanTargetRangeSq ->
+                        releaseReason = ReleaseReason.OUT_OF_RANGE
                 renderTarget != null
-                    && renderTarget !in world.entitiesForRendering() -> releaseReason = ReleaseReason.LOSE_TARGET
+                    && renderTarget !in world.entitiesForRendering() -> releaseReason = ReleaseReason.OUT_OF_RANGE
                 target != null && (LagValueGroup.flushOnLandingWithTarget && wasInAir && !isInAir) ->
                     releaseReason = ReleaseReason.LANDING_WITH_TARGET
             }
@@ -562,7 +562,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
     private enum class ReleaseReason(override val tag: String) : Tagged {
         FLAGGED("Flagged"),
         SPECTATOR("Spectator"),
-        LOSE_TARGET("LoseTarget"),
+        OUT_OF_RANGE("OutOfRange"),
         DELAY_END("DelayEnd"),
         LANDING_WITH_TARGET("LandingWithTarget")
     }

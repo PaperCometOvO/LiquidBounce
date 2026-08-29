@@ -816,7 +816,7 @@
   "liquidbounce.module.velocity.messages.newReduceReachTargetStopLagging": "Stop Lagging (reach target)",
   "liquidbounce.module.velocity.messages.newReduceFlaggedStopLagging": "Stop Lagging (flagged by anticheat)",
   "liquidbounce.module.velocity.messages.newReduceSpectatorStopLagging": "Stop Lagging (spectator)",
-  "liquidbounce.module.velocity.messages.newReduceLoseTargetStopLagging": "Stop Lagging (lose target)",
+  "liquidbounce.module.velocity.messages.newReduceOutOfRangeStopLagging": "Stop Lagging (out of range)",
   "liquidbounce.module.velocity.messages.newReduceDelayEndStopLagging": "Stop Lagging (delay end)",
   "liquidbounce.module.velocity.messages.newReduceLandingWithTargetStopLagging": "Stop Lagging (landing with target)",
   "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "Attacked for %s times. Remaining attack count: 0",
