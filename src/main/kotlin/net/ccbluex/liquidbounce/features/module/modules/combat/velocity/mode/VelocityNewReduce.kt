@@ -111,6 +111,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
     private object AutoRotate : ToggleableValueGroup(this, "AutoRotate", true) {
         val rotationTime by int("RotationTime", 2, 0..20, "ticks")
+        val movementCorrection by enumChoice("MovementCorrection", MovementCorrection.STRICT)
         val angleSmooth = choices("AngleSmooth", 0) {
             val linear = LinearAngleSmooth(it)
             val interpolation = InterpolationAngleSmooth(it)
@@ -506,7 +507,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 ticksUntilReset = AutoRotate.rotationTime,
                 resetThreshold = 2f,
                 considerInventory = false,
-                movementCorrection = MovementCorrection.STRICT
+                movementCorrection = AutoRotate.movementCorrection
             ),
             priority = Priority.IMPORTANT_FOR_USAGE_2,
             provider = ModuleVelocity
