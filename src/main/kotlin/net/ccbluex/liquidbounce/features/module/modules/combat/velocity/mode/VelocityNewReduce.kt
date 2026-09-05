@@ -302,9 +302,6 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                     attackCount--
 
                     if (target != null && target in world.entitiesForRendering()) {
-                        if (AutoRotate.canRotate) {
-                            rotate(target!!)
-                        }
                         val attackResult = attackCurrentTarget(target!!)
                         if (attackCount == 0) {
                             target = null
@@ -475,9 +472,8 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             val nearestEntity = world.entitiesForRendering()
                 .filterIsInstance<LivingEntity> { !it.isRemoved && it.shouldBeAttacked() }
                 .minByOrNull { it.distanceTo(player) }
-
             renderTarget = nearestEntity
-            if (nearestEntity != null && shouldLag && AutoRotate.canRotate
+            if (nearestEntity != null && AutoRotate.canRotate
                 && nearestEntity.squaredBoxedDistanceTo(player)
                 <= ModuleKillAura.range.interactionRange.toDouble().sq()) {
                 rotate(nearestEntity)
