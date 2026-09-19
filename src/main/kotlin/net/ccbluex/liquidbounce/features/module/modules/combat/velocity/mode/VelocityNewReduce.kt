@@ -92,6 +92,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             tree(AttackCountForHVelocity)
         }
 
+        val attackBeforeHurtTime by int("AttackBeforeHurtTime", 0, 0..10)
         val mode by enumChoice("Mode", AttackMode.PER_TICK)
         val forceForward by boolean("ForceForward", true)
         val horizontalVelocityReduction by float("HorizontalVelocityReduction", 0.6f, 0f..1f)
@@ -270,45 +271,39 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
             when (AttackValueGroup.mode) {
                 AttackMode.ONE_TIME -> {
-                    if (target != null && target in world.entitiesForRendering()) {
-                        val attackResults = ArrayList<Boolean>()
+                    if (target != null && target in world.entitiesForRendering()
+                        && player.hurtTime >= AttackValueGroup.attackBeforeHurtTime
+                        && player.isSprinting) {
                         for (i in 1..attackCount) {
-                            attackResults.add(attackCurrentTarget(target!!))
+                            attackCurrentTarget(target!!)
                         }
 
-                        if (attackResults.size == attackCount) {
-                            Debug.notify(translation(
-                                "liquidbounce.module.velocity.messages.newReduceOneTimeAttack"
-                                ,attackCount)
-                            )
-                        } else {
-                            Debug.notify(translation(
-                                "liquidbounce.module.velocity.messages.newReduceOneTimeCorruptAttack"
-                                ,attackResults.size
-                                ,attackResults - attackResults.size)
-                            )
-                        }
+                        Debug.notify(translation(
+                            "liquidbounce.module.velocity.messages.newReduceOneTimeAttack"
+                            ,attackCount)
+                        )
 
+                        attackCount = 0
+                        target = null
+                    }
+                    else if (player.hurtTime < AttackValueGroup.attackBeforeHurtTime || player.hurtTime == 0) {
                         attackCount = 0
                         target = null
                     } else {
-                        attackCount = 0
-                        target = null
                         Debug.notify(translation(
                             "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack"
                             ,attackCount))
                     }
                 }
                 AttackMode.PER_TICK -> {
-                    attackCount--
-
-                    if (target != null && target in world.entitiesForRendering()) {
+                    if (target != null && target in world.entitiesForRendering() && player.hurtTime > AttackValueGroup.attackBeforeHurtTime) {
                         val attackResult = attackCurrentTarget(target!!)
                         if (attackCount == 0) {
                             target = null
                         }
 
                         if (attackResult) {
+                            attackCount--
                             Debug.notify(translation(
                                 "liquidbounce.module.velocity.messages.newReducePerTickAttack"
                                 ,attackCount)
@@ -319,8 +314,10 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                                 ,attackCount)
                             )
                         }
-                    }
-                    else {
+                    } else if (player.hurtTime < AttackValueGroup.attackBeforeHurtTime || player.hurtTime == 0) {
+                        attackCount = 0
+                        target = null
+                    } else {
                         if (attackCount == 0) {
                             target = null
                         }

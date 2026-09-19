@@ -817,8 +817,7 @@
   "liquidbounce.module.velocity.messages.newReduceDelayEndStopLagging": "停止延遲（延遲時間結束）",
   "liquidbounce.module.velocity.messages.newReduceLandingWithTargetStopLagging": "停止延遲（落地且有目標）",
   "liquidbounce.module.velocity.messages.newReduceOneTimeAttack": "攻擊了 %s 次。剩餘的攻擊次數爲：0",
-  "liquidbounce.module.velocity.messages.newReduceOneTimeCorruptAttack": "攻擊了 %s 次，沒有攻擊 %s 次，剩餘的攻擊次數爲：0",
-  "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack": "沒有攻擊。剩餘的攻擊次數爲：0",
+  "liquidbounce.module.velocity.messages.newReduceOneTimeDidNotAttack": "沒有攻擊。等待下一個刻",
   "liquidbounce.module.velocity.messages.newReducePerTickAttack": "已攻擊。剩餘的攻擊次數爲：%s",
   "liquidbounce.module.velocity.messages.newReducePerTickDidNotAttack": "沒有攻擊。剩餘的攻擊次數爲：%s"
 }
