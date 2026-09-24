@@ -24,7 +24,6 @@ import net.ccbluex.liquidbounce.config.types.group.ToggleableValueGroup
 import net.ccbluex.liquidbounce.config.types.group.ValueGroup
 import net.ccbluex.liquidbounce.event.events.BlinkPacketEvent
 import net.ccbluex.liquidbounce.event.events.GameTickEvent
-import net.ccbluex.liquidbounce.event.events.MovementInputEvent
 import net.ccbluex.liquidbounce.event.events.PacketEvent
 import net.ccbluex.liquidbounce.event.events.TickPacketProcessEvent
 import net.ccbluex.liquidbounce.event.events.TransferOrigin
@@ -58,7 +57,6 @@ import net.ccbluex.liquidbounce.utils.entity.squaredBoxedDistanceTo
 import net.ccbluex.liquidbounce.utils.kotlin.Priority
 import net.ccbluex.liquidbounce.utils.math.multiply
 import net.ccbluex.liquidbounce.utils.math.sq
-import net.ccbluex.liquidbounce.utils.movement.DirectionalInput
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerDamage
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
 import net.ccbluex.liquidbounce.utils.raytracing.findEntityInCrosshair
@@ -92,9 +90,8 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             tree(AttackCountForHVelocity)
         }
 
-        val attackBeforeHurtTime by int("AttackBeforeHurtTime", 0, 0..10)
+        val hurtTime by int("HurtTime", 10, 0..10)
         val mode by enumChoice("Mode", AttackMode.PER_TICK)
-        val forceForward by boolean("ForceForward", true)
         val horizontalVelocityReduction by float("HorizontalVelocityReduction", 0.6f, 0f..1f)
         val verticalVelocityReduction by float("VerticalVelocityReduction", 1.0f, 0f..1f)
     }
@@ -272,7 +269,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
             when (AttackValueGroup.mode) {
                 AttackMode.ONE_TIME -> {
                     if (target != null && target in world.entitiesForRendering()
-                        && player.hurtTime >= AttackValueGroup.attackBeforeHurtTime
+                        && player.hurtTime > (10 - AttackValueGroup.hurtTime)
                         && player.isSprinting) {
                         for (i in 1..attackCount) {
                             attackCurrentTarget(target!!)
@@ -286,7 +283,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                         attackCount = 0
                         target = null
                     }
-                    else if (player.hurtTime < AttackValueGroup.attackBeforeHurtTime || player.hurtTime == 0) {
+                    else if (player.hurtTime <= (10 - AttackValueGroup.hurtTime)) {
                         attackCount = 0
                         target = null
                     } else {
@@ -296,7 +293,9 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                     }
                 }
                 AttackMode.PER_TICK -> {
-                    if (target != null && target in world.entitiesForRendering() && player.hurtTime > AttackValueGroup.attackBeforeHurtTime) {
+                    if (target != null
+                        && target in world.entitiesForRendering()
+                        && player.hurtTime > (10 - AttackValueGroup.hurtTime)) {
                         val attackResult = attackCurrentTarget(target!!)
                         if (attackCount == 0) {
                             target = null
@@ -314,7 +313,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                                 ,attackCount)
                             )
                         }
-                    } else if (player.hurtTime < AttackValueGroup.attackBeforeHurtTime || player.hurtTime == 0) {
+                    } else if (player.hurtTime <= (10 - AttackValueGroup.hurtTime)) {
                         attackCount = 0
                         target = null
                     } else {
@@ -410,13 +409,6 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
                 }
             }
             releaseReason = null
-        }
-    }
-
-    @Suppress("unused")
-    private val movementInputEventHandler = handler<MovementInputEvent> { event ->
-        if (attackCount > 0 && AttackValueGroup.forceForward) {
-            event.directionalInput = DirectionalInput.FORWARDS
         }
     }
 
