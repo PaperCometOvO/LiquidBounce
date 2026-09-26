@@ -30,7 +30,7 @@ class SpeedBECubecraft(override val parent: ModeValueGroup<*>) : Mode("BECubecra
     @Suppress("unused")
     val repeatable = handler<PlayerPostTickEvent> {
         repeat(additionalTicks) {
-            player.tick()
+            player.aiStep()
         }
     }
 }
