@@ -36,7 +36,6 @@ import net.minecraft.world.level.block.DoorBlock
 import net.minecraft.world.level.block.FenceGateBlock
 import net.minecraft.world.level.block.TrapDoorBlock
 import net.minecraft.world.phys.BlockHitResult
-import org.lwjgl.glfw.GLFW
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -94,7 +93,7 @@ object ModuleDBCHelper : ClientModule("DBCHelper", ModuleCategories.COMBAT) {
 
     @Suppress("unused")
     private val mouseButtonHandler = suspendHandler<MouseButtonEvent> { event ->
-        if (event.action == GLFW.GLFW_PRESS && event.button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.isLeftClick) {
             AttackButton.run {
                 if (!enabled || !mc.options.keyAttack.isPressedOnAny) {
                     return@run
@@ -116,7 +115,7 @@ object ModuleDBCHelper : ClientModule("DBCHelper", ModuleCategories.COMBAT) {
                 mc.options.keyAttack.clickCount += 1
             }
         }
-        if (event.action == GLFW.GLFW_PRESS && event.button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.isRightClick) {
             UseButton.run {
                 if (!enabled || !mc.options.keyUse.isPressedOnAny) {
                     return@run
