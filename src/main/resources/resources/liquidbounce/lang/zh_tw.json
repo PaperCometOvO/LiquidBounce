@@ -433,6 +433,7 @@
   "liquidbounce.module.autoFarm.description": "自動種植農作物。",
   "liquidbounce.module.autoFish.description": "持有魚竿時自動釣魚。",
   "liquidbounce.module.autoLeave.description": "當你的血量低於一定值時，自動離開伺服器。",
+  "liquidbounce.module.autoL.description": "自動嘲諷被你殺死的玩家",
   "liquidbounce.module.autoMobHeal.description": "自動使用生物對應的原版修復或餵食物品，為附近可透過原版方式回血的生物恢復生命。",
   "liquidbounce.module.autoPearl.description": "跟隨敵人珍珠的軌跡瞄準並投擲珍珠。",
   "liquidbounce.module.autoPlay.description": "自動為你進入隊列開始遊戲。",

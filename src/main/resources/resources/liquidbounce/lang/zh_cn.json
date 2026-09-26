@@ -436,6 +436,7 @@
   "liquidbounce.module.autoFarm.messages.noLongerCollecting": "AutoFarm 将不再拾取物品",
   "liquidbounce.module.autoFish.description": "持有鱼竿时自动钓鱼。",
   "liquidbounce.module.autoLeave.description": "当你的血量低于一定值时，自动离开服务器。",
+  "liquidbounce.module.autoL.description": "自动嘲讽被你杀死的玩家",
   "liquidbounce.module.autoMobHeal.description": "自动使用生物对应的原版修复或喂食物品，为附近可通过原版方式回血的生物恢复生命。",
   "liquidbounce.module.autoPearl.description": "跟随敌人珍珠的轨迹瞄准并投掷珍珠。",
   "liquidbounce.module.autoPlay.description": "自动为你进入队列开始游戏。",
