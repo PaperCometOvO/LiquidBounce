@@ -40,7 +40,6 @@ import net.ccbluex.liquidbounce.utils.client.regular
 import net.ccbluex.liquidbounce.utils.network.handlePacket
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket
-import org.lwjgl.glfw.GLFW
 import java.util.concurrent.ConcurrentLinkedQueue
 
 object LagLongJump : Mode("Lag") {
@@ -82,7 +81,7 @@ object LagLongJump : Mode("Lag") {
 
     @Suppress("unused")
     private val keyboardKeyHandler = suspendHandler<KeyboardKeyEvent> { event ->
-        if (event.action == GLFW.GLFW_PRESS && event.key == mc.options.keyJump.key) {
+        if (event.isPressed && event.key == mc.options.keyJump.key) {
             val currentTimeMillis = System.currentTimeMillis()
             if (currentTimeMillis - jumpKeyTimestamp < 400 && velocityAmount > 0) {
                 shouldRelease = true
