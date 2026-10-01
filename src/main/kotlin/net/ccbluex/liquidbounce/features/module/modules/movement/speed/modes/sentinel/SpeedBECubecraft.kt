@@ -23,6 +23,8 @@ import net.ccbluex.liquidbounce.config.types.group.Mode
 import net.ccbluex.liquidbounce.config.types.group.ModeValueGroup
 import net.ccbluex.liquidbounce.event.events.PlayerPostTickEvent
 import net.ccbluex.liquidbounce.event.handler
+import net.ccbluex.liquidbounce.event.tickHandler
+import net.ccbluex.liquidbounce.utils.entity.withStrafe
 
 class SpeedBECubecraft(override val parent: ModeValueGroup<*>) : Mode("BECubecraft") {
     private val additionalTicks by int("AdditionalTicks", 2, 1..10, "ticks")
@@ -32,5 +34,10 @@ class SpeedBECubecraft(override val parent: ModeValueGroup<*>) : Mode("BECubecra
         repeat(additionalTicks) {
             player.aiStep()
         }
+    }
+
+    @Suppress("unused")
+    val tickHandler = tickHandler {
+        player.deltaMovement = player.deltaMovement.withStrafe()
     }
 }
