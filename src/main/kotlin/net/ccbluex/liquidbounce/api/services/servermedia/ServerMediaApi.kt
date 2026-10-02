@@ -16,12 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
+package net.ccbluex.liquidbounce.api.services.servermedia
 
-package net.ccbluex.liquidbounce.utils.client.error.errors
+import net.ccbluex.liquidbounce.api.core.BaseApi
 
-class JcefIsntCompatible : ClientError(
-    message = "JCEF Isn't compatible",
-    needToReport = false
-) {
-    fun readResolve(): Any = JcefIsntCompatible()
+/**
+ * CCBlueX's mirror of LabyMod's server-media, which collects icons of Minecraft servers.
+ */
+object ServerMediaApi : BaseApi(BASE_URL) {
+
+    /**
+     * @param domains the folder of the server each domain belongs to
+     */
+    class Index(val domains: Map<String, String>)
+
+    suspend fun getIndex() = get<Index>("/index.json")
+
+    fun iconUrl(folder: String) = "$BASE_URL/minecraft_servers/$folder/icon.png"
+
 }
+
+private const val BASE_URL = "https://server-media.liquidbounce.net"

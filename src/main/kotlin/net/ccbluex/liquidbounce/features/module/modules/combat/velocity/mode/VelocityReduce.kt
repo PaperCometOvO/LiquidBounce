@@ -320,9 +320,7 @@ object VelocityReduce : VelocityMode("Reduce") {
 
         if (packet.isLocalPlayerDamage()) {
             receiveDamage = true
-        }
-
-        if (packet.isLocalPlayerVelocity() && receiveDamage) {
+        } else if (packet.isLocalPlayerVelocity() && receiveDamage) {
             receiveDamage = false
             findTarget()
 

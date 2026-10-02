@@ -22,7 +22,6 @@ import com.mojang.blaze3d.platform.InputConstants
 import it.unimi.dsi.fastutil.ints.Int2ReferenceMap
 import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap
 import net.ccbluex.fastutil.enumSetOf
-import net.ccbluex.fastutil.unmodifiable
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.config.types.list.Tagged.Companion.makeLookupTable
@@ -85,11 +84,14 @@ data class InputBind(
     /**
      * Determines if the specified key matches the bound key.
      *
+     * An unbound key never matches, because [InputConstants.UNKNOWN] is scan code `0`, the value SDL reports
+     * for keys it cannot map.
+     *
      * @param scanCode The scan code to check.
      * @return True if the SDL scan code matches the bound key, false otherwise.
      */
     fun matchesKey(scanCode: Int): Boolean {
-        return this.boundKey.type == InputConstants.Type.KEYBOARD && this.boundKey.value == scanCode
+        return !isUnbound && this.boundKey.type == InputConstants.Type.KEYBOARD && this.boundKey.value == scanCode
     }
 
     /**
@@ -201,12 +203,10 @@ data class InputBind(
          */
         SMART("Smart");
 
-        companion object {
-            @JvmStatic
-            private val LOOKUP_TABLE = BindAction.entries.makeLookupTable()
+        companion {
+            private val byName = BindAction.entries.makeLookupTable()
 
-            @JvmStatic
-            fun of(string: String?): BindAction? = LOOKUP_TABLE[string]
+            fun of(string: String?): BindAction? = byName[string]
         }
     }
 
@@ -246,27 +246,22 @@ data class InputBind(
         }
 
         companion object {
-            @JvmStatic
-            private val LOOKUP_TABLE = Modifier.entries.makeLookupTable()
+            private val byName = Modifier.entries.makeLookupTable()
 
-            @JvmStatic
-            private val KEY_CODE_LOOKUP: Int2ReferenceMap<Modifier> = run {
+            private val byKeyCode: Int2ReferenceMap<Modifier> = run {
                 val map = Int2ReferenceOpenHashMap<Modifier>()
                 for (modifier in Modifier.entries) {
                     for (keyCode in modifier.keyCodes) {
                         map.put(keyCode, modifier)
                     }
                 }
-                map.unmodifiable()
+                map
             }
 
-            @JvmStatic
-            fun of(string: String?): Modifier? = LOOKUP_TABLE[string]
+            fun of(string: String?): Modifier? = byName[string]
 
-            @JvmStatic
-            fun of(keyCode: Int): Modifier? = KEY_CODE_LOOKUP[keyCode]
+            fun of(keyCode: Int): Modifier? = byKeyCode[keyCode]
 
-            @JvmStatic
             fun fromRawValue(modifiers: Int) = entries.filterTo(enumSetOf()) {
                 it.isActive(modifiers)
             }
