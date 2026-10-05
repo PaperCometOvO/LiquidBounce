@@ -22,11 +22,11 @@ package net.ccbluex.liquidbounce.features.module.modules.movement.movementfix.mo
 import net.ccbluex.liquidbounce.config.types.group.Mode
 import net.ccbluex.liquidbounce.config.types.group.ModeValueGroup
 import net.ccbluex.liquidbounce.event.tickHandler
-import net.ccbluex.liquidbounce.features.module.modules.movement.liquidwalk.ModuleLiquidWalk
+import net.ccbluex.liquidbounce.features.module.modules.movement.movementfix.ModuleMovementFix
 
 object MovementFixBECubecraft : Mode("BECubecraft") {
     override val parent: ModeValueGroup<Mode>
-        get() = ModuleLiquidWalk.modes
+        get() = ModuleMovementFix.mode
 
     private val deltaReduce by float("DeltaReduce", 0.9f, 0.0f..1.0f)
 

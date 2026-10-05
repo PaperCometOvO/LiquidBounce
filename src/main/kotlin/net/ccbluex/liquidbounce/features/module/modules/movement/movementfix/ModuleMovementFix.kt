@@ -19,12 +19,14 @@
 
 package net.ccbluex.liquidbounce.features.module.modules.movement.movementfix
 
+import net.ccbluex.liquidbounce.config.types.group.Mode
+import net.ccbluex.liquidbounce.config.types.group.ModeValueGroup
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
 import net.ccbluex.liquidbounce.features.module.modules.movement.movementfix.modes.MovementFixBECubecraft
 
 object ModuleMovementFix : ClientModule("MovementFix", ModuleCategories.MOVEMENT) {
-    internal val mode = choices("Mode", MovementFixBECubecraft, arrayOf(
+    internal val mode: ModeValueGroup<Mode> = choices("Mode", MovementFixBECubecraft, arrayOf(
         MovementFixBECubecraft
     ))
 }
