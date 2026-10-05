@@ -28,14 +28,14 @@ object MovementFixBECubecraft : Mode("BECubecraft") {
     override val parent: ModeValueGroup<Mode>
         get() = ModuleLiquidWalk.modes
 
-    private val deltaReduce = float("DeltaReduce", 0.9f, 0.0f..1.0f)
+    private val deltaReduce by float("DeltaReduce", 0.9f, 0.0f..1.0f)
 
     @Suppress("unused")
-    private val playerMoveHandler = tickHandler {
+    private val tickHandler = tickHandler {
         if (player.isSprinting) {
-            player.deltaMovement = player.deltaMovement.multiply(deltaReduce.get().toDouble(),
+            player.deltaMovement = player.deltaMovement.multiply(deltaReduce.toDouble(),
                 1.0,
-                deltaReduce.get().toDouble())
+                deltaReduce.toDouble())
         }
     }
 }
