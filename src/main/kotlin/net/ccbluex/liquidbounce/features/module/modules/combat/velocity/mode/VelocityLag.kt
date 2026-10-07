@@ -42,7 +42,6 @@ internal object VelocityLag : VelocityMode("Lag") {
 
     private val lagTime by intRange("LagTime", 5..5, 1..20, "ticks")
     private val jumpReset by boolean("JumpReset", false)
-    private val unchangedPing by boolean("UnchangedPing", true)
     private val considerExplosion by boolean("ConsiderExplosion", true)
 
     private var shouldLag = false
@@ -61,10 +60,7 @@ internal object VelocityLag : VelocityMode("Lag") {
 
     @Suppress("unused")
     private val queuePacketHandler = handler<BlinkPacketEvent> { event ->
-        val packet = event.packet
-        if (!shouldLag || event.origin != TransferOrigin.INCOMING) {
-            return@handler
-        } else if (unchangedPing && packet is ClientboundKeepAlivePacket) {
+        if (!shouldLag || event.origin != TransferOrigin.INCOMING || event.packet is ClientboundKeepAlivePacket) {
             return@handler
         }
 
@@ -82,6 +78,7 @@ internal object VelocityLag : VelocityMode("Lag") {
     private val tickPacketProcessHandler = sequenceHandler<TickPacketProcessEvent> {
         if (shouldLag && lagTicks == 0) {
             shouldLag = false
+            lagTicks = 0
             BlinkManager.flush(TransferOrigin.INCOMING)
             shouldJump = true
             waitTicks(2)
