@@ -49,12 +49,13 @@ import net.ccbluex.liquidbounce.utils.kotlin.Priority
 object ModuleSprint : ClientModule("Sprint", ModuleCategories.MOVEMENT) {
 
     private enum class SprintMode(override val tag: String) : Tagged {
-        LEGIT("Legit"),
+        LEGITFAST("LegitFast"),
+        INPUT("Input"),
         OMNIDIRECTIONAL("Omnidirectional"),
         OMNIROTATIONAL("Omnirotational"),
     }
 
-    private val sprintMode by enumChoice("Mode", SprintMode.LEGIT)
+    private val sprintMode by enumChoice("Mode", SprintMode.LEGITFAST)
 
     private val ignore by multiEnumChoice<Ignore>("Ignore")
 
@@ -84,6 +85,10 @@ object ModuleSprint : ClientModule("Sprint", ModuleCategories.MOVEMENT) {
         }
 
         if (event.source == SprintEvent.Source.MOVEMENT_TICK || event.source == SprintEvent.Source.INPUT) {
+            if (sprintMode == SprintMode.INPUT) {
+                mc.options.keySprint.isDown = true
+                return@handler
+            }
             event.sprint = true
         }
     }
@@ -93,6 +98,10 @@ object ModuleSprint : ClientModule("Sprint", ModuleCategories.MOVEMENT) {
         // In this case we want to prevent sprinting on movement tick only,
         // because otherwise you could guess from the input change that this is automated.
         if (event.source == SprintEvent.Source.MOVEMENT_TICK && shouldPreventSprint()) {
+            if (sprintMode == SprintMode.INPUT) {
+                mc.options.keySprint.isDown = false
+                return@handler
+            }
             event.sprint = false
         }
     }
