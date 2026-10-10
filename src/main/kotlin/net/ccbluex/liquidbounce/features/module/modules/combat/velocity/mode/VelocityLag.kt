@@ -34,6 +34,7 @@ import net.ccbluex.liquidbounce.utils.network.LocalPlayerFallDamageTracker
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
 import net.minecraft.network.protocol.common.ClientboundKeepAlivePacket
 import net.minecraft.network.protocol.common.ClientboundPingPacket
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
 
 /**
  * Lag mode. It delays some ticks of knockback.
@@ -66,7 +67,7 @@ internal object VelocityLag : VelocityMode("Lag") {
         val packet = event.packet
         if (!shouldLag || event.origin != TransferOrigin.INCOMING) {
             return@handler
-        } else if (onlyCachePingRelated && packet !is ClientboundKeepAlivePacket && packet !is ClientboundPingPacket) {
+        } else if (onlyCachePingRelated && packet !is ClientboundKeepAlivePacket && packet !is ClientboundPingPacket && packet !is ClientboundSetEntityMotionPacket) {
             return@handler
         } else if (unchangedPing && packet is ClientboundKeepAlivePacket) {
             return@handler
