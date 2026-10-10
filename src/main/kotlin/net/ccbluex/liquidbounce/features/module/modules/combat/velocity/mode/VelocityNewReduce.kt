@@ -39,7 +39,6 @@ import net.ccbluex.liquidbounce.features.blink.esp.BlinkEspNone
 import net.ccbluex.liquidbounce.features.blink.esp.BlinkEspWireframe
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.ModuleVelocity
-import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityNewReduce.LagValueGroup.unchangedPing
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager
 import net.ccbluex.liquidbounce.utils.aiming.RotationTarget
@@ -101,7 +100,6 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
         val flushOnLandingWithTarget by boolean("FlushOnLandingWithTarget", true)
         val scanTargetRange by floatRange("ScanTargetRange", 0.0f..6.0f, 0.0f..10.0f)
         val maxDelay by int("MaxDelay", 30, 0..20, "ticks")
-        val unchangedPing by boolean("UnchangedPing", true)
         val requireKillAura by boolean("RequireKillAura", true)
 
         val scanTargetRangeSq = scanTargetRange.start.sq()..scanTargetRange.endInclusive.sq()
@@ -251,10 +249,7 @@ object VelocityNewReduce : VelocityMode("NewReduce") {
 
     @Suppress("unused")
     private val queuePacketHandler = handler<BlinkPacketEvent> { event ->
-        val packet = event.packet
-        if (!shouldLag || event.origin != TransferOrigin.INCOMING) {
-            return@handler
-        } else if (unchangedPing && packet is ClientboundKeepAlivePacket) {
+        if (shouldLag || event.origin != TransferOrigin.INCOMING || event.packet is ClientboundKeepAlivePacket) {
             return@handler
         }
 
