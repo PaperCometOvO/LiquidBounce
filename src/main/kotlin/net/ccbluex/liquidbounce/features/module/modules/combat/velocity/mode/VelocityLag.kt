@@ -67,7 +67,10 @@ internal object VelocityLag : VelocityMode("Lag") {
         val packet = event.packet
         if (!shouldLag || event.origin != TransferOrigin.INCOMING) {
             return@handler
-        } else if (onlyCachePingRelated && packet !is ClientboundKeepAlivePacket && packet !is ClientboundPingPacket && packet !is ClientboundSetEntityMotionPacket) {
+        } else if (onlyCachePingRelated
+            && packet !is ClientboundKeepAlivePacket
+            && packet !is ClientboundPingPacket
+            && packet !is ClientboundSetEntityMotionPacket) {
             return@handler
         } else if (unchangedPing && packet is ClientboundKeepAlivePacket) {
             return@handler
