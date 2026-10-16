@@ -91,10 +91,9 @@ internal object VelocityJumpReset : VelocityMode("JumpReset") {
     private val packetHandler = handler<PacketEvent> { event ->
         val packet = event.packet
 
-        if (packet.isLocalPlayerVelocity(considerExplosion)
+        if (packet.isLocalPlayerVelocity()
             && lagUntilGround && !player.onGround() && !player.isInWater) {
             shouldLag = true
-            lagTicks = lagTime.random()
         }
     }
 
