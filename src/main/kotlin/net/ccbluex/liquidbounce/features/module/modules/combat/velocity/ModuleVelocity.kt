@@ -33,6 +33,7 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.Vel
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityGrim2344
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityGrim2371
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityHylex
+import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityHypixel
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityIntave
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityJumpReset
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityLag
@@ -41,7 +42,6 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.Vel
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityReduce
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityReversal
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityStrafe
-import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityZeqa
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
@@ -67,10 +67,10 @@ object ModuleVelocity : ClientModule("Velocity", ModuleCategories.COMBAT, aliase
             VelocityNewReduce,
 
             // Server modes
+            VelocityHypixel,
             VelocityDexland,
             VelocityHylex,
             VelocityBlocksMC,
-            VelocityZeqa,
 
             // Anti cheat modes
             VelocityGrim2371,
