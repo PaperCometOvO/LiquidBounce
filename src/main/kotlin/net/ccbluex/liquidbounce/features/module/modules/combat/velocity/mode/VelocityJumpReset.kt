@@ -92,7 +92,7 @@ internal object VelocityJumpReset : VelocityMode("JumpReset") {
         val packet = event.packet
 
         if (packet.isLocalPlayerVelocity()
-            && lagUntilGround && !player.onGround() && !player.isInWater) {
+            && lagUntilGround && !player.onGround() && !player.isInLiquid) {
             shouldLag = true
         }
     }
