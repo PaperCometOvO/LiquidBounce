@@ -20,10 +20,21 @@ package net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode
 
 import net.ccbluex.liquidbounce.config.types.group.ToggleableValueGroup
 import net.ccbluex.liquidbounce.config.utils.percentageChance
+import net.ccbluex.liquidbounce.event.events.BlinkPacketEvent
+import net.ccbluex.liquidbounce.event.events.GameTickEvent
 import net.ccbluex.liquidbounce.event.events.MovementInputEvent
+import net.ccbluex.liquidbounce.event.events.PacketEvent
+import net.ccbluex.liquidbounce.event.events.TickPacketProcessEvent
+import net.ccbluex.liquidbounce.event.events.TransferOrigin
 import net.ccbluex.liquidbounce.event.handler
+import net.ccbluex.liquidbounce.event.sequenceHandler
+import net.ccbluex.liquidbounce.event.waitTicks
+import net.ccbluex.liquidbounce.features.blink.BlinkManager
+import net.ccbluex.liquidbounce.features.blink.BlinkManager.Action
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.utils.network.LocalPlayerFallDamageTracker
+import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
+import net.minecraft.network.protocol.common.ClientboundKeepAlivePacket
 
 /**
  * Jump Reset mode. A technique most players use to minimize the amount of knockback they get.
@@ -45,14 +56,23 @@ internal object VelocityJumpReset : VelocityMode("JumpReset") {
         tree(JumpByDelay)
     }
 
+    private val lagUntilGround by boolean("LagUntilGround", false)
+
     private var limitUntilJump = 0
+    private var lagTicks = 0
+    private var shouldLag = false
+    private var shouldJump = false
     private var hitsUntilJump = JumpByReceivedHits.hitsUntilJump.random()
     private var ticksUntilJump = JumpByDelay.ticksUntilJump.random()
 
     @Suppress("ComplexCondition", "unused")
     private val movementInputHandler = handler<MovementInputEvent> { event ->
+        // Regular jump.
+        if (player.hurtTime == 9 && !lagUntilGround) {
+            shouldJump = true
+        }
         // To be able to alter velocity when receiving knockback, player must be sprinting.
-        if (player.hurtTime != 9 || !player.onGround() || !player.isSprinting ||
+        if (!shouldJump || !player.onGround() || !player.isSprinting ||
             LocalPlayerFallDamageTracker.isCurrentFallDamage || !isCooldownOver() || !chance.asBoolean)
         {
             updateLimit()
@@ -61,9 +81,49 @@ internal object VelocityJumpReset : VelocityMode("JumpReset") {
 
         event.jump = true
         limitUntilJump = 0
+        shouldJump = false
 
         hitsUntilJump = JumpByReceivedHits.hitsUntilJump.random()
         ticksUntilJump = JumpByDelay.ticksUntilJump.random()
+    }
+
+    @Suppress("unused")
+    private val packetHandler = handler<PacketEvent> { event ->
+        val packet = event.packet
+
+        if (packet.isLocalPlayerVelocity(considerExplosion)
+            && lagUntilGround && !player.onGround() && !player.isInWater) {
+            shouldLag = true
+            lagTicks = lagTime.random()
+        }
+    }
+
+    @Suppress("unused")
+    private val queuePacketHandler = handler<BlinkPacketEvent> { event ->
+        if (!shouldLag || event.origin != TransferOrigin.INCOMING || event.packet is ClientboundKeepAlivePacket) {
+            return@handler
+        }
+
+        event.action = Action.QUEUE
+    }
+
+    @Suppress("unused")
+    private val tickHandler = handler<GameTickEvent> {
+        if (shouldLag) {
+            lagTicks--
+        }
+    }
+
+    @Suppress("unused")
+    private val tickPacketProcessHandler = sequenceHandler<TickPacketProcessEvent> {
+        if (shouldLag && lagTicks == 0) {
+            shouldLag = false
+            lagTicks = 0
+            BlinkManager.flush(TransferOrigin.INCOMING)
+            shouldJump = true
+            waitTicks(2)
+            shouldJump = false
+        }
     }
 
     private fun isCooldownOver(): Boolean {
