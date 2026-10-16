@@ -17,9 +17,8 @@
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.ccbluex.liquidbounce.render.engine.font
+package net.ccbluex.liquidbounce.utils.kotlin
 
-@JvmRecord
-data class GlyphIdentifier(val codepoint: Int, val font: FontId) {
-    constructor(fontGlyph: FontGlyph) : this(fontGlyph.codepoint, fontGlyph.font)
-}
+fun safeIntRangeOf(a: Int, b: Int) = minOf(a, b)..maxOf(a, b)
+fun Int.rangeAround(radius: Int) = this - radius..this + radius
+fun IntRange.coerceIn(range: IntRange) = (maxOf(first, range.first)..minOf(last, range.last))

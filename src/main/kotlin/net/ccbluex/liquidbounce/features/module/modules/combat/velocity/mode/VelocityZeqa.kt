@@ -16,33 +16,50 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
-
 package net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode
 
+import net.ccbluex.liquidbounce.event.events.GameTickEvent
 import net.ccbluex.liquidbounce.event.events.PacketEvent
 import net.ccbluex.liquidbounce.event.handler
-import net.ccbluex.liquidbounce.utils.entity.withStrafe
+import net.ccbluex.liquidbounce.features.module.modules.movement.fly.ModuleFly
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
-import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket
 
-object VelocityZeqa : VelocityMode("Zeqa") {
-    private val strafeSpeed by float("StrafeSpeed", 0.1f, 0.0f..1.0f)
-    private val strafeStrength by float("StrafeStrength", 0.1f, 0.0f..1.0f)
+internal object VelocityHypixel : VelocityMode("Hypixel") {
+
+    private var absorbedVelocity = false
 
     @Suppress("unused")
     private val packetHandler = handler<PacketEvent> { event ->
         val packet = event.packet
 
-        if (packet is ServerboundMovePlayerPacket) {
-            packet.onGround = true
+        if (ModuleFly.enabled) {
+            return@handler
         }
 
+        // Check if this is a regular velocity update
         if (packet is ClientboundSetEntityMotionPacket && packet.id == player.id) {
-            player.deltaMovement = player.deltaMovement.withStrafe(strafeSpeed.toDouble(), strafeStrength.toDouble())
-
-            packet.movement.x = packet.movement.x * 0.5
-            packet.movement.y = packet.movement.y * 0.3
-            packet.movement.z = packet.movement.z * 0.5
+            if (!player.onGround()) {
+                if (!absorbedVelocity) {
+                    event.cancelEvent()
+                    absorbedVelocity = true
+                    return@handler
+                }
+            }
+            packet.movement.x = player.deltaMovement.x
+            packet.movement.z = player.deltaMovement.z
         }
     }
+
+    @Suppress("unused")
+    private val gameHandler = handler<GameTickEvent> {
+        if (player.onGround()) {
+            absorbedVelocity = false
+        }
+    }
+
+    override fun disable() {
+        super.disable()
+        this.absorbedVelocity = false
+    }
+
 }

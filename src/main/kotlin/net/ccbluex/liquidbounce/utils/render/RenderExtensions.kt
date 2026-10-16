@@ -39,6 +39,7 @@ import com.mojang.renderpearl.api.textures.GpuTextureView
 import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.ByteBufferBuilder
 import com.mojang.blaze3d.vertex.PoseStack
+import it.unimi.dsi.fastutil.ints.IntArrays
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.client.gpuDevice
 import net.ccbluex.liquidbounce.utils.client.mc
@@ -343,7 +344,7 @@ fun BufferedImage.copyToNativeImage(
     targetY: Int = 0,
     width: Int = this.width,
     height: Int = this.height,
-    scratchBuffer: IntArray = IntArray(0),
+    scratchBuffer: IntArray = IntArrays.EMPTY_ARRAY,
 ): IntArray {
     require(!target.isClosed) { "Target image is closed" }
     require(target.format() == NativeImage.Format.RGBA) { "Target image must use RGBA format" }
@@ -433,7 +434,7 @@ inline fun InputStream.readNativeImage(): NativeImage = NativeImage.read(this)
  * Read and close source. Accepts JPEG and PNG.
  */
 fun BufferedSource.readNativeImage(): NativeImage =
-    this.ensurePngOrConvertJpeg().inputStream().readNativeImage()
+    use { source -> source.ensurePngOrConvertJpeg().inputStream().readNativeImage() }
 
 /**
  * Read from file. Accepts JPEG and PNG.
@@ -506,9 +507,7 @@ value class KStd140SizeCalculator(val j: Std140SizeCalculator) {
         j.align(alignedSize)
     }
 
-    inline operator fun Unit.plus(other: Unit) {
-        // NOOP
-    }
+    inline operator fun Unit.plus(other: Unit) = Unit
 
     inline fun get() = j.get()
 }
