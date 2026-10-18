@@ -19,7 +19,6 @@
 
 package net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode
 
-import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.events.BlinkPacketEvent
 import net.ccbluex.liquidbounce.event.events.GameTickEvent
 import net.ccbluex.liquidbounce.event.events.MovementInputEvent
@@ -34,7 +33,6 @@ import net.ccbluex.liquidbounce.features.blink.BlinkManager.Action
 import net.ccbluex.liquidbounce.utils.network.LocalPlayerFallDamageTracker
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
 import net.minecraft.network.protocol.common.ClientboundKeepAlivePacket
-import net.minecraft.network.protocol.common.ClientboundPingPacket
 
 /**
  * Lag mode. It delays some ticks of knockback.
@@ -42,7 +40,6 @@ import net.minecraft.network.protocol.common.ClientboundPingPacket
  */
 internal object VelocityLag : VelocityMode("Lag") {
 
-    private val mode by enumChoice("Mode", LagMode.NORMAL)
     private val lagTime by intRange("LagTime", 5..5, 1..20, "ticks")
     private val jumpReset by boolean("JumpReset", false)
     private val considerExplosion by boolean("ConsiderExplosion", true)
@@ -63,21 +60,11 @@ internal object VelocityLag : VelocityMode("Lag") {
 
     @Suppress("unused")
     private val queuePacketHandler = handler<BlinkPacketEvent> { event ->
-        if (mode == LagMode.NORMAL) {
-            if (!shouldLag || event.origin != TransferOrigin.INCOMING || event.packet is ClientboundKeepAlivePacket) {
-                return@handler
-            }
-
-            event.action = Action.QUEUE
-        } else if (mode == LagMode.SIMPLE) {
-            if (!shouldLag || event.origin != TransferOrigin.INCOMING || event.packet is ClientboundKeepAlivePacket) {
-                return@handler
-            }
-
-            if (event.packet is ClientboundPingPacket || event.packet.isLocalPlayerVelocity(considerExplosion)) {
-                event.action = Action.QUEUE
-            }
+        if (!shouldLag || event.origin != TransferOrigin.INCOMING || event.packet is ClientboundKeepAlivePacket) {
+            return@handler
         }
+
+        event.action = Action.QUEUE
     }
 
     @Suppress("unused")
@@ -118,8 +105,4 @@ internal object VelocityLag : VelocityMode("Lag") {
         lagTicks = 0
     }
 
-    private enum class LagMode(override val tag: String) : Tagged {
-        NORMAL("Normal"),
-        SIMPLE("Simple")
-    }
 }
