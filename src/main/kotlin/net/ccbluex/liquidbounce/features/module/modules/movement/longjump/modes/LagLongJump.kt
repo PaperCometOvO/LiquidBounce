@@ -39,7 +39,6 @@ import net.ccbluex.liquidbounce.utils.client.markAsError
 import net.ccbluex.liquidbounce.utils.client.regular
 import net.ccbluex.liquidbounce.utils.network.handlePacket
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
-import net.minecraft.network.protocol.common.ClientboundKeepAlivePacket
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -70,7 +69,7 @@ object LagLongJump : Mode("Lag") {
 
     @Suppress("unused")
     private val queuePacketHandler = handler<BlinkPacketEvent> { event ->
-        if (!shouldLag || event.origin != TransferOrigin.INCOMING || event.packet is ClientboundKeepAlivePacket) {
+        if (!shouldLag || event.origin != TransferOrigin.INCOMING) {
             return@handler
         } else if (event.packet.isLocalPlayerVelocity(true)) {
             velocityAmount += 1

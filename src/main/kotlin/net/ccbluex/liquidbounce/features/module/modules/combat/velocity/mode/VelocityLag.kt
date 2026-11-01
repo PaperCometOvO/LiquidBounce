@@ -32,7 +32,6 @@ import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.ccbluex.liquidbounce.features.blink.BlinkManager.Action
 import net.ccbluex.liquidbounce.utils.network.LocalPlayerFallDamageTracker
 import net.ccbluex.liquidbounce.utils.network.isLocalPlayerVelocity
-import net.minecraft.network.protocol.common.ClientboundKeepAlivePacket
 
 /**
  * Lag mode. It delays some ticks of knockback.
@@ -60,7 +59,7 @@ internal object VelocityLag : VelocityMode("Lag") {
 
     @Suppress("unused")
     private val queuePacketHandler = handler<BlinkPacketEvent> { event ->
-        if (!shouldLag || event.origin != TransferOrigin.INCOMING || event.packet is ClientboundKeepAlivePacket) {
+        if (!shouldLag || event.origin != TransferOrigin.INCOMING) {
             return@handler
         }
 
