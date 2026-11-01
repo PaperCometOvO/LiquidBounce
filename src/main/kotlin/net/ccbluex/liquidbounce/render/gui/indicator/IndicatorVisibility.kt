@@ -17,15 +17,17 @@
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.ccbluex.liquidbounce.injection.mixins.authlib;
+package net.ccbluex.liquidbounce.render.gui.indicator
 
-import com.mojang.authlib.services.MinecraftServicesDiscoveryService;
-import com.mojang.authlib.services.MinecraftServicesSessionService;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import net.ccbluex.liquidbounce.config.types.list.Tagged
 
-@Mixin(MinecraftServicesSessionService.class)
-public interface MixinMinecraftServicesSessionServiceAccessor {
-    @Accessor(remap = false)
-    MinecraftServicesDiscoveryService getDiscoveryService();
+/**
+ * Where an indicator is drawn.
+ *
+ * [OFFSCREEN] covers targets outside the viewport as well as targets behind the camera, which have no projection to
+ * test at all.
+ */
+enum class IndicatorVisibility(override val tag: String) : Tagged {
+    IN_VIEW("InView"),
+    OFFSCREEN("Offscreen"),
 }

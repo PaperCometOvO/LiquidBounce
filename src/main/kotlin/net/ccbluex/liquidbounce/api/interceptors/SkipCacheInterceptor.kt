@@ -17,12 +17,29 @@
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.ccbluex.liquidbounce.utils.text
+package net.ccbluex.liquidbounce.api.interceptors
 
-import net.minecraft.network.chat.Style
+import okhttp3.CacheControl
+import okhttp3.Interceptor
+import okhttp3.Response
+import java.util.function.Predicate
 
-inline fun Style.with(block: StyleBuilder.() -> Unit): Style =
-    StyleBuilder(this).apply(block).build()
+class SkipCacheInterceptor(
+    val condition: Predicate<in String>,
+) : Interceptor {
 
-inline fun style(block: StyleBuilder.() -> Unit): Style =
-    Style.EMPTY.with(block)
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+        if (condition.test(request.url.host)) {
+            val newRequest = request.newBuilder()
+                .cacheControl(cacheControl)
+                .build()
+            return chain.proceed(newRequest)
+        }
+        return chain.proceed(request)
+    }
+
+    companion {
+        private val cacheControl = CacheControl.Builder().noCache().noStore().build()
+    }
+}
